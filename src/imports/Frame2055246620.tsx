@@ -210,7 +210,6 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
   const [isFocused, setIsFocused] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFading, setIsFading] = useState(false);
-  const [showExpandedContent, setShowExpandedContent] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
   const [inputWidth, setInputWidth] = useState(0);
@@ -240,11 +239,8 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
           setInputValue('');
           setIsFocused(false);
           setTimeout(() => {
-            setShowExpandedContent(true);
-            setTimeout(() => {
-              onNavigate?.();
-            }, 1200);
-          }, 1600);
+            onNavigate?.();
+          }, 800);
         }, 450);
       }, 300);
     }
@@ -308,17 +304,6 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       </div>
       </div>
-      {showExpandedContent && (
-        <div style={{ opacity: showExpandedContent ? 1 : 0, transition: 'opacity 800ms ease-in-out' }}>
-          <ExpandedFrame7 />
-          <ExpandedFrame1 />
-          <ExpandedGroup5 />
-          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[947.762px] left-[calc(50%+596.18px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-1.49px)] w-[588.641px]" />
-          <ExpandedFrame2 />
-          <ExpandedGroup />
-          <ExpandedGroup1 />
-        </div>
-      )}
       <div className="absolute inset-0 pointer-events-none rounded-[inherit] shadow-[inset_-18px_-12px_7.8px_0px_rgba(255,255,255,0.25),inset_8px_4px_14.7px_0px_rgba(0,0,0,0)]" />
       <div aria-hidden="true" className="absolute border-[0.2px] border-solid inset-0 pointer-events-none rounded-[60px]" style={{ borderColor: 'rgba(255, 255, 255, 0.5)', background: 'linear-gradient(133deg, rgba(240, 240, 240, 0.01) -43.11%, rgba(255, 255, 255, 0.01) 102.39%)', boxShadow: '-24px -16px 12px 0 rgba(255, 255, 255, 0.3) inset, -8px -4px 6px 0 rgba(255, 255, 255, 0.4) inset, 12px 8px 20px 0 rgba(0, 0, 0, 0.075) inset, 4px 2px 8px 0 rgba(0, 0, 0, 0.05) inset, 47px 70px 100px 0 rgba(0, 0, 0, 0.08), 0 4px 24px 0 rgba(255, 255, 255, 0.15) inset, 0 -2px 12px 0 rgba(255, 255, 255, 0.25) inset' }} />
     </div>
