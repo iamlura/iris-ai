@@ -44,11 +44,7 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
       setScheduleSentVisible(true);
-      setSubScreen('sent');
       setInputValue('');
-      setTimeout(() => {
-        setSubScreen('calendar');
-      }, 1000);
     }
   };
 
@@ -72,70 +68,9 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
           {/* Main card */}
           <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[rgba(0,0,0,0)] h-[823.61px] left-[calc(50%+1px)] overflow-clip rounded-[60px] shadow-[47px_70px_100px_0px_rgba(0,0,0,0.05)] top-[calc(50%-34.2px)] w-[1816.5px]">
 
-            {/* Left: thumbnail sidebar */}
-            <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[723px] left-[calc(50%-818.75px)] overflow-clip rounded-bl-[50px] rounded-br-[20px] rounded-tl-[20px] rounded-tr-[20px] top-[calc(50%+36.09px)] w-[151px]">
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-318.96px)] w-[151.238px]">
-                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[20px] size-full" src={imgRectangle3473784} />
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-225.89px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[300.42%] left-0 max-w-none top-0 w-[303.93%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-132.82px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[310.94%] left-0 max-w-none top-[-105.85%] w-[303.93%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-39.75px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[308.53%] left-0 max-w-none top-[-207.35%] w-[303.93%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%+53.32px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[305.95%] left-[-102.29%] max-w-none top-[-1.5%] w-[305.5%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%+146.39px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[301.42%] left-[-201.83%] max-w-none top-0 w-[302.45%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%+239.46px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[311.29%] left-[-102.99%] max-w-none top-[-208.35%] w-[304.61%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-              <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%+332.53px)] w-[151.238px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-[311.29%] left-[-201.6%] max-w-none top-[-208.35%] w-[302.53%]" src={imgRectangle3473785} />
-                </div>
-              </div>
-            </div>
-
-            {/* Logo above sidebar */}
-            <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[30.319px] left-[calc(50%-818.77px)] top-[calc(50%-364.48px)] w-[120.96px]">
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1010109929} />
-            </div>
-
-            {/* Center: white doc area */}
-            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-white h-[795.397px] left-[calc(50%-145.58px)] opacity-80 rounded-[20px] top-[calc(50%-0.11px)] w-[1175.145px]" />
-
-            {/* Center: Q3 Summary title — hidden when calendar shown */}
-            <div
-              className="-translate-y-1/2 absolute flex flex-col font-['Google_Sans',sans-serif] font-bold justify-center leading-[0] left-[calc(50%-607.21px)] not-italic opacity-80 text-[52.054px] text-black top-[calc(50%-0.11px)] whitespace-nowrap transition-opacity duration-500"
-              style={{ opacity: subScreen === 'calendar' ? 0 : 1 }}
-            >
-              <p className="leading-[1.5]">Q3 Summary</p>
-            </div>
-
-            {/* Calendar overlay */}
-            <div
-              className="-translate-x-1/2 -translate-y-1/2 absolute top-[calc(50%-0.11px)] left-[calc(50%-145.58px)] w-[1175.145px] h-[795.397px] rounded-[20px] overflow-hidden transition-opacity duration-500"
-              style={{ opacity: subScreen === 'calendar' ? 1 : 0 }}
-            >
-              <img alt="Calendar" className="w-full h-full object-cover" src={imgCalendar} />
+            {/* Left+Center: Calendar fills entire left area, always visible */}
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute top-[calc(50%-0.11px)] left-[calc(50%-291px)] w-[1350px] h-[823.61px] rounded-tl-[50px] rounded-bl-[50px] rounded-tr-[20px] rounded-br-[20px] overflow-hidden">
+              <img alt="Calendar" className="w-full h-full object-cover object-left-top" src={imgCalendar} />
             </div>
 
             {/* Right: chat sidebar bg */}
