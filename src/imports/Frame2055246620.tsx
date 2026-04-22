@@ -205,7 +205,7 @@ function Frame1({ inputValue, isFocused }: { inputValue: string; isFocused: bool
   );
 }
 
-function Frame() {
+function Frame({ onNavigate }: { onNavigate?: () => void }) {
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -241,6 +241,9 @@ function Frame() {
           setIsFocused(false);
           setTimeout(() => {
             setShowExpandedContent(true);
+            setTimeout(() => {
+              onNavigate?.();
+            }, 1200);
           }, 1600);
         }, 450);
       }, 300);
@@ -322,11 +325,11 @@ function Frame() {
   );
 }
 
-export default function Frame2() {
+export default function Frame2({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="bg-[#F2F4F9] relative size-full">
       <Group />
-      <Frame />
+      <Frame onNavigate={onNavigate} />
     </div>
   );
 }
