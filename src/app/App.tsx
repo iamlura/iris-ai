@@ -7,7 +7,13 @@ export default function App() {
 
   return (
     <div className="w-[1920px] h-[1200px] bg-[#F2F4F9] mx-auto relative overflow-hidden">
-      <Frame2055246620 onNavigate={() => setShowQ3(true)} />
+      {/* Hide landing frame once Q3 is shown */}
+      <div
+        className="absolute inset-0 transition-opacity duration-700"
+        style={{ opacity: showQ3 ? 0 : 1, pointerEvents: showQ3 ? 'none' : 'auto' }}
+      >
+        <Frame2055246620 onNavigate={() => setShowQ3(true)} />
+      </div>
       <Frame2055246625 visible={showQ3} />
     </div>
   );
