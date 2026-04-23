@@ -205,7 +205,7 @@ function Frame1({ inputValue, isFocused }: { inputValue: string; isFocused: bool
   );
 }
 
-function Frame({ onNavigate }: { onNavigate?: () => void }) {
+function Frame({ onNavigate, onNavigateBi }: { onNavigate?: () => void; onNavigateBi?: () => void }) {
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -231,7 +231,10 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim().toLowerCase() === 'create q3 summary') {
+    const val = inputValue.trim().toLowerCase();
+    const isBiPrompt = val.includes('create') && val.includes('bi');
+    if (e.key === 'Enter' && (val === 'create q3 summary' || isBiPrompt)) {
+      const isBi = isBiPrompt && val !== 'create q3 summary';
       setTimeout(() => {
         setIsFading(true);
         setTimeout(() => {
@@ -239,7 +242,11 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
           setInputValue('');
           setIsFocused(false);
           setTimeout(() => {
-            onNavigate?.();
+            if (isBi) {
+              onNavigateBi?.();
+            } else {
+              onNavigate?.();
+            }
           }, 800);
         }, 450);
       }, 300);
@@ -310,11 +317,11 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export default function Frame2({ onNavigate }: { onNavigate?: () => void }) {
+export default function Frame2({ onNavigate, onNavigateBi }: { onNavigate?: () => void; onNavigateBi?: () => void }) {
   return (
     <div className="bg-[#F2F4F9] relative size-full">
       <Group />
-      <Frame onNavigate={onNavigate} />
+      <Frame onNavigate={onNavigate} onNavigateBi={onNavigateBi} />
     </div>
   );
 }
