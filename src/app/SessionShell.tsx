@@ -407,7 +407,13 @@ export default function SessionShell({
             position: 'absolute',
             inset: 0,
             opacity: contentVisible ? 1 : 0,
-            transition: `opacity ${CONTENT_FADE}ms ease-in-out`,
+            // Use visibility to forcibly remove this subtree from
+            // hit-testing when hidden — opacity + pointer-events alone
+            // doesn't stop descendants that explicitly set pointer-events.
+            visibility: contentVisible ? 'visible' : 'hidden',
+            transition: contentVisible
+              ? `opacity ${CONTENT_FADE}ms ease-in-out, visibility 0s 0s`
+              : `opacity ${CONTENT_FADE}ms ease-in-out, visibility 0s ${CONTENT_FADE}ms`,
             pointerEvents: contentVisible ? 'auto' : 'none',
           }}
         >
@@ -431,7 +437,10 @@ export default function SessionShell({
                   inset: 0,
                   opacity: k === leftContentKey ? 1 : 0,
                   transition: `opacity ${LEFT_CROSSFADE}ms ease-in-out`,
-                  pointerEvents: k === leftContentKey ? 'auto' : 'none',
+                  // Must be 'none' when the expanded layer isn't visible,
+                  // otherwise this invisible layer sits on top of the
+                  // landing input and eats clicks.
+                  pointerEvents: contentVisible && k === leftContentKey ? 'auto' : 'none',
                 }}
               >
                 {node}
