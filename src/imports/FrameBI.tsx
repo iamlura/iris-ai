@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import imgBiDashboard from './bi-image.png';
-import imgOutlookEmail from './outlook-email.png';
 
-// Fresh Figma MCP asset URLs (valid ~7 days from generation)
+// Fresh Figma MCP asset URLs
+// BI dashboard screenshot (node 1-3693)
+const imgBiDashboard = "https://www.figma.com/api/mcp/asset/79da4616-4eba-4a5d-a9d1-8e8dfd4ff21b";
+// Outlook email screenshot (node 1-3746 / 41-20785)
+const imgOutlookEmail = "https://www.figma.com/api/mcp/asset/371210d9-d4f7-4349-853b-45041a5f2c7b";
+// Share icon
+const imgShareIcon = "https://www.figma.com/api/mcp/asset/4e00ede5-5184-4677-af12-441b02fe42f8";
+// Mic icon for input bar
+const imgMicIcon = "https://www.figma.com/api/mcp/asset/4d5703e3-5184-4fe3-8a59-bb246b4a1bf7";
+
+// Doc grid images (Collection of Documents screen)
 const imgRectangle3473812 = "https://www.figma.com/api/mcp/asset/ff02b34c-df96-45c4-bde5-db24e38e0c2f";
 const imgRectangle3473815 = "https://www.figma.com/api/mcp/asset/4686ad7d-a11a-4d6e-aff6-9af5568c4e64";
 const imgRectangle3473820 = "https://www.figma.com/api/mcp/asset/56b41e23-2810-4962-8b30-1aa78d8a9c00";
@@ -14,7 +22,6 @@ const imgRectangle3473817 = "https://www.figma.com/api/mcp/asset/0f39ee08-ec12-4
 const imgRectangle3473822 = "https://www.figma.com/api/mcp/asset/85128ad7-3b20-4870-ac9c-1756fb5d8827";
 const imgRectangle3473819 = "https://www.figma.com/api/mcp/asset/62aae8b2-01d3-49b9-9914-f50421e36103";
 const imgRectangle3473823 = "https://www.figma.com/api/mcp/asset/4b47c7e8-5d32-43fc-9824-106b5b25fe53";
-const imgGroup1010109849 = "https://www.figma.com/api/mcp/asset/072a9ee3-16d6-4249-a1ce-683a0c82b5c2";
 
 type SubScreen = 'docs' | 'bi' | 'email';
 
@@ -22,14 +29,14 @@ export default function FrameBI({ visible }: { visible: boolean }) {
   const [subScreen, setSubScreen] = useState<SubScreen>('docs');
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [sendBubbleVisible, setSendBubbleVisible] = useState(false);
+  const [forwardBubbleVisible, setForwardBubbleVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (visible) {
       setSubScreen('docs');
       setInputValue('');
-      setSendBubbleVisible(false);
+      setForwardBubbleVisible(false);
     }
   }, [visible]);
 
@@ -42,8 +49,12 @@ export default function FrameBI({ visible }: { visible: boolean }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
       const val = inputValue.trim().toLowerCase();
-      if (val.includes('send') && val.includes('bi')) {
-        setSendBubbleVisible(true);
+      // Trigger on: "forward" OR ("send" + "bi") OR ("forward" + "bi")
+      const isForwardTrigger =
+        val.includes('forward') ||
+        (val.includes('send') && val.includes('bi'));
+      if (isForwardTrigger) {
+        setForwardBubbleVisible(true);
         setInputValue('');
         setTimeout(() => {
           setSubScreen('email');
@@ -62,20 +73,18 @@ export default function FrameBI({ visible }: { visible: boolean }) {
       <div className="relative size-full">
 
         {/* Clock */}
-        <div className="absolute contents left-[1771px] not-italic text-black top-[50px] whitespace-nowrap">
-          <p className="absolute font-['Google_Sans',sans-serif] leading-normal left-[1791px] opacity-50 text-[16px] top-[50px]">2026.5.20</p>
-          <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">08:58</p>
-        </div>
+        <p className="absolute font-['Google_Sans',sans-serif] leading-normal left-[1791px] opacity-50 text-[16px] top-[50px]">2026.5.20</p>
+        <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">08:58</p>
 
         {/* Main expanded card */}
         <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[rgba(0,0,0,0)] h-[990px] left-[calc(50%+0.5px)] overflow-clip rounded-[60px] shadow-[47px_70px_100px_0px_rgba(0,0,0,0.05)] top-[calc(50%+49px)] w-[1817px]">
 
-          {/* ── LAYER 1: Collection of Documents (docs screen) ── */}
+          {/* ── LAYER 1: Collection of Documents ── */}
           <div
             className="absolute inset-0 transition-opacity duration-700"
             style={{ opacity: subScreen === 'docs' ? 1 : 0, pointerEvents: subScreen === 'docs' ? 'auto' : 'none' }}
           >
-            {/* Top-right action buttons */}
+            {/* Action buttons */}
             <div className="absolute content-stretch flex gap-[16px] items-center left-[872.2px] top-[68.11px]">
               <div className="bg-[#515c72] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
                 <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
@@ -173,61 +182,56 @@ export default function FrameBI({ visible }: { visible: boolean }) {
             {/* Right: AI response */}
             <div className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[152.41px]">
               <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.4px]">
-                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include. `}</p>
+                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include.`}</p>
               </div>
             </div>
           </div>
 
-          {/* ── LAYER 2: BI Dashboard (bi screen) ── */}
+          {/* ── LAYER 2: BI Dashboard ── */}
           <div
             className="absolute inset-0 transition-opacity duration-700"
             style={{ opacity: subScreen === 'bi' || subScreen === 'email' ? 1 : 0, pointerEvents: subScreen === 'bi' || subScreen === 'email' ? 'auto' : 'none', zIndex: subScreen === 'bi' || subScreen === 'email' ? 1 : 0 }}
           >
-            {/* Left+center: BI dashboard image */}
+            {/* Left panel background */}
+            <div className="absolute bg-[#f6f9fc] h-[947.762px] left-[21.47px] rounded-[50px] top-[19.63px] w-[1169.225px]" />
+
+            {/* BI dashboard image — fades out when email shown */}
             <div
-              className="absolute top-0 left-0 h-full transition-opacity duration-700"
-              style={{ width: '1200px', opacity: subScreen === 'email' ? 0 : 1 }}
+              className="absolute h-[947.762px] left-[17.54px] rounded-[50px] top-[19.63px] w-[1176.791px] transition-opacity duration-700 overflow-hidden"
+              style={{ opacity: subScreen === 'email' ? 0 : 1 }}
             >
-              <img
-                alt="Fiscal Year BI Dashboard"
-                className="absolute inset-0 w-full h-full object-cover object-left-top rounded-tl-[60px] rounded-bl-[60px]"
-                src={imgBiDashboard}
-              />
+              <img alt="Fiscal Year BI Dashboard" className="absolute inset-0 w-full h-full object-cover object-left-top rounded-[50px]" src={imgBiDashboard} />
             </div>
 
-            {/* Left+center: Outlook email image (crossfades in over BI) */}
+            {/* Outlook email image — crossfades in */}
             <div
-              className="absolute top-0 left-0 h-full transition-opacity duration-700"
-              style={{ width: '1200px', opacity: subScreen === 'email' ? 1 : 0 }}
+              className="absolute h-[947.762px] left-[17.54px] rounded-[50px] top-[19.63px] w-[1176.791px] transition-opacity duration-700 overflow-hidden"
+              style={{ opacity: subScreen === 'email' ? 1 : 0 }}
             >
-              <img
-                alt="Outlook Email"
-                className="absolute inset-0 w-full h-full object-cover object-left-top rounded-tl-[60px] rounded-bl-[60px]"
-                src={imgOutlookEmail}
-              />
+              <img alt="Outlook Email" className="absolute inset-0 w-full h-full object-cover object-left-top rounded-[50px]" src={imgOutlookEmail} />
             </div>
 
             {/* Right sidebar bg */}
             <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[947.762px] left-[calc(50%+596.18px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-1.49px)] w-[588.641px]" />
 
-            {/* Right: edit + share buttons */}
-            <div className="absolute content-stretch flex gap-[16px] items-center left-[872.2px] top-[68.11px]">
-              <div className="bg-[#515c72] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
+            {/* Top action buttons — edit + share */}
+            <div className="absolute content-stretch flex gap-[16px] items-center left-[908.5px] top-[52.91px]" style={{ zIndex: 2 }}>
+              <div className="bg-[#515c72] content-stretch flex h-[46px] items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
                 <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
                   <p className="leading-[1.5]">edit</p>
                 </div>
               </div>
-              <div className="bg-[#034bd8] content-stretch flex items-center justify-center gap-[8px] pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" className="shrink-0">
-                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-                </svg>
+              <div className="bg-[#034bd8] content-stretch flex h-[46px] items-center justify-center gap-[6.4px] pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
+                <div className="h-[14.565px] relative shrink-0 w-[11.272px]">
+                  <img alt="" className="block max-w-none size-full" src={imgShareIcon} />
+                </div>
                 <div className="flex flex-col font-['Google_Sans',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
                   <p className="leading-[1.5]">share</p>
                 </div>
               </div>
             </div>
 
-            {/* Right: original user prompt */}
+            {/* Right: original prompt bubble */}
             <div className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[62.36px]">
               <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic opacity-80 relative shrink-0 text-[18px] text-black text-center tracking-[-1.3997px] whitespace-nowrap">
                 <p className="leading-[1.5]">Create Power BI of this year's earnings</p>
@@ -237,31 +241,46 @@ export default function FrameBI({ visible }: { visible: boolean }) {
             {/* Right: AI response */}
             <div className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[152.41px]">
               <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.4px]">
-                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include. `}</p>
+                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include.`}</p>
               </div>
             </div>
 
-            {/* Right: "Forward BI to relevant people" bubble — appears after send */}
+            {/* Right: "Forward BI to relevant people" user bubble — appears after trigger */}
             <div
-              className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[270px] transition-opacity duration-300"
-              style={{ opacity: sendBubbleVisible ? 1 : 0 }}
+              className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1488.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[306.46px] transition-opacity duration-300"
+              style={{ opacity: forwardBubbleVisible ? 1 : 0 }}
             >
-              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[281px]">
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic opacity-80 relative shrink-0 text-[18px] text-black text-center tracking-[-1.3997px] whitespace-nowrap">
                 <p className="leading-[1.5]">Forward BI to relevant people</p>
+              </div>
+            </div>
+
+            {/* Right: AI forwarding response — appears with email screen */}
+            <div
+              className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[396.52px] transition-opacity duration-700"
+              style={{ opacity: subScreen === 'email' ? 1 : 0 }}
+            >
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[405px]">
+                <p className="leading-[1.5] mb-0 whitespace-pre-wrap">Forwarding document to relevant people: </p>
+                <ul className="list-disc">
+                  <li className="mb-0 ms-[24px]"><span className="leading-[1.5]">Tom C (Finance Rep.) &lt;tom.c@hp.com&gt;</span></li>
+                  <li className="mb-0 ms-[24px]"><span className="leading-[1.5]">Jesse M (Accounting Rep.) &lt;jesse.m@hp.com&gt;</span></li>
+                  <li className="ms-[24px]"><span className="leading-[1.5]">Chris H (Sales Rep.) &lt;chris.h@hp.com&gt;</span></li>
+                </ul>
               </div>
             </div>
 
           </div>
 
-          {/* ── INPUT BAR — always on top, outside both layers ── */}
+          {/* ── INPUT BAR — always on top ── */}
           <div
             className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
-            style={{ zIndex: 10, pointerEvents: visible ? 'auto' : 'none' }}
+            style={{ zIndex: 10, pointerEvents: 'auto' }}
             onClick={() => inputRef.current?.focus()}
           >
             <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
               <div className="absolute inset-[0_-5.4%_-2.77%_-5.4%]">
-                <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
+                <img alt="" className="block max-w-none size-full" src={imgMicIcon} />
               </div>
             </div>
             <div className="relative flex-1">
@@ -282,7 +301,7 @@ export default function FrameBI({ visible }: { visible: boolean }) {
                 onBlur={() => setIsFocused(false)}
                 onKeyDown={handleKeyDown}
                 className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
-                style={{ caretColor: 'black' }}
+                style={{ caretColor: 'black', pointerEvents: 'auto' }}
               />
             </div>
           </div>
