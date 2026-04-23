@@ -101,9 +101,11 @@ export default function FrameBI({
       className="absolute inset-0 transition-opacity duration-700"
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#F4F4F9' }}
     >
-      {/* Live clock — shifted 12px right */}
-      <p className="absolute opacity-50 text-[16px]" style={{ fontFamily: "'Google_Sans', sans-serif", top: '50px', right: '117px', lineHeight: 'normal' }}>{date}</p>
-      <p className="absolute opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, top: '72px', right: '41px', lineHeight: 0.91 }}>{time}</p>
+      {/* Live clock — matches landing screen exactly */}
+      <div className="absolute not-italic text-black whitespace-nowrap" style={{ top: '50px', right: '41px', textAlign: 'right' }}>
+        <p className="font-['Google_Sans',sans-serif] leading-[normal] opacity-50 text-[16px]" style={{ margin: 0 }}>{date}</p>
+        <p className="font-['Google_Sans',sans-serif] leading-[0.91] opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontWeight: 500, margin: 0 }}>{time}</p>
+      </div>
 
       {/* End session button */}
       <button
