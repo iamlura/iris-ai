@@ -181,7 +181,7 @@ export default function FrameBI({ visible }: { visible: boolean }) {
           {/* ── LAYER 2: BI Dashboard (bi screen) ── */}
           <div
             className="absolute inset-0 transition-opacity duration-700"
-            style={{ opacity: subScreen === 'bi' || subScreen === 'email' ? 1 : 0, pointerEvents: subScreen === 'bi' || subScreen === 'email' ? 'auto' : 'none' }}
+            style={{ opacity: subScreen === 'bi' || subScreen === 'email' ? 1 : 0, pointerEvents: subScreen === 'bi' || subScreen === 'email' ? 'auto' : 'none', zIndex: subScreen === 'bi' || subScreen === 'email' ? 1 : 0 }}
           >
             {/* Left+center: BI dashboard image */}
             <div
@@ -251,37 +251,39 @@ export default function FrameBI({ visible }: { visible: boolean }) {
               </div>
             </div>
 
-            {/* Right: input bar */}
-            <div
-              className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
-              onClick={() => inputRef.current?.focus()}
-            >
-              <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
-                <div className="absolute inset-[0_-5.4%_-2.77%_-5.4%]">
-                  <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
-                </div>
+          </div>
+
+          {/* ── INPUT BAR — always on top, outside both layers ── */}
+          <div
+            className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
+            style={{ zIndex: 10 }}
+            onClick={() => inputRef.current?.focus()}
+          >
+            <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
+              <div className="absolute inset-[0_-5.4%_-2.77%_-5.4%]">
+                <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
               </div>
-              <div className="relative flex-1">
-                {inputValue === '' && (
-                  <span
-                    className="absolute top-0 left-0 font-['Google_Sans',sans-serif] text-[16px] text-black leading-[1.5] pointer-events-none transition-opacity duration-200"
-                    style={{ opacity: isFocused ? 0.3 : 1 }}
-                  >
-                    |Ask Anything
-                  </span>
-                )}
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={e => setInputValue(e.target.value)}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  onKeyDown={handleKeyDown}
-                  className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
-                  style={{ caretColor: 'black' }}
-                />
-              </div>
+            </div>
+            <div className="relative flex-1">
+              {inputValue === '' && (
+                <span
+                  className="absolute top-0 left-0 font-['Google_Sans',sans-serif] text-[16px] text-black leading-[1.5] pointer-events-none transition-opacity duration-200"
+                  style={{ opacity: isFocused ? 0.3 : 1 }}
+                >
+                  |Ask Anything
+                </span>
+              )}
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={e => setInputValue(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                onKeyDown={handleKeyDown}
+                className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
+                style={{ caretColor: 'black' }}
+              />
             </div>
           </div>
 
