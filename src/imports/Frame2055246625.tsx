@@ -79,8 +79,8 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
             <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-318.96px)] w-[151.238px]">
               <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[20px] size-full" src={imgRectangle3473784} />
             </div>
-            {[−225.89, −132.82, −39.75, 53.32, 146.39, 239.46, 332.53].map((offset, i) => (
-              <div key={i} className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] w-[151.238px]" style={{ top: `calc(50%+${offset}px)` }}>
+            {([-225.89, -132.82, -39.75, 53.32, 146.39, 239.46, 332.53] as number[]).map((offset, i) => (
+              <div key={i} className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] w-[151.238px]" style={{ top: `calc(50% + ${offset}px)` }}>
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
                   <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[200.92%]" src={imgRectangle3473785} />
                 </div>
