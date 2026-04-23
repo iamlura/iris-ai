@@ -40,22 +40,24 @@ export default function App() {
   const handleReset = () => {
     // Step 1: 1 second delay
     setTimeout(() => {
-      // Step 2: show overlay at full card size
+      // Step 2: show overlay covering the screen at full card size
       setResetting(true);
       setPillShrunk(false);
 
-      // Step 3: wait for browser to paint the big pill, then trigger shrink
-      // Double rAF ensures the initial state is painted before transition starts
+      // Step 3: double rAF so browser paints big pill before transition fires
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setPillShrunk(true);
 
-          // Step 4: after shrink completes (1000ms), reset to landing
+          // Step 4: shrink takes 1000ms — swap to landing while overlay still covers
           setTimeout(() => {
             setShowQ3(false);
             setShowBI(false);
-            setResetting(false);
-            setPillShrunk(false);
+            // Step 5: tiny delay so landing pill is rendered, then drop overlay
+            setTimeout(() => {
+              setResetting(false);
+              setPillShrunk(false);
+            }, 50);
           }, 1000);
         });
       });
@@ -102,7 +104,7 @@ export default function App() {
 
         {/* Landing */}
         <div
-          className="absolute inset-0 transition-opacity duration-700"
+          className="absolute inset-0"
           style={{ opacity: showQ3 || showBI ? 0 : 1, pointerEvents: showQ3 || showBI ? 'none' : 'auto' }}
         >
           <Frame2055246620
