@@ -105,10 +105,10 @@ export default function Frame2055246625({
       className="absolute inset-0 transition-opacity duration-700"
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#F4F4F9' }}
     >
-      {/* Live clock — right-aligned, date above time, shifted 12px right */}
-      <div className="absolute" style={{ top: '50px', right: '41px', textAlign: 'right' }}>
-        <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', opacity: 0.5, lineHeight: 'normal', margin: 0 }}>{date}</p>
-        <p style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, fontSize: '36px', opacity: 0.8, lineHeight: 0.91, letterSpacing: '-1.08px', margin: 0 }}>{time}</p>
+      {/* Live clock — matches landing screen exactly */}
+      <div className="absolute not-italic text-black whitespace-nowrap" style={{ top: '50px', right: '41px', textAlign: 'right' }}>
+        <p className="font-['Google_Sans',sans-serif] leading-[normal] opacity-50 text-[16px]" style={{ margin: 0 }}>{date}</p>
+        <p className="font-['Google_Sans',sans-serif] leading-[0.91] opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontWeight: 500, margin: 0 }}>{time}</p>
       </div>
 
       {/* End session button */}
