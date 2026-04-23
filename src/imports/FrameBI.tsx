@@ -109,7 +109,7 @@ export default function FrameBI({
 
       {/* End session button */}
       <button
-        className="absolute rounded-[53.25px] cursor-pointer transition-opacity duration-500"
+        className="absolute rounded-[53.25px] cursor-pointer"
         style={{
           background: '#960000', top: '55px', right: '294px',
           padding: '9px 31.5px 7.5px',
@@ -257,7 +257,7 @@ export default function FrameBI({
 
           {/* Edit + Share buttons — hidden after email */}
           <div
-            className="absolute flex gap-[16px] items-center transition-opacity duration-500"
+            className="absolute flex gap-[16px] items-center"
             style={{ left: '908.5px', top: '52.91px', zIndex: 2, opacity: subScreen === 'email' ? 0 : 1, pointerEvents: subScreen === 'email' ? 'none' : 'auto' }}
           >
             <div className="flex items-center justify-center rounded-[42.6px]" style={{ background: '#515c72', height: '46px', padding: '7.2px 25.2px 6px' }}>
@@ -288,7 +288,7 @@ export default function FrameBI({
 
           {/* "Forward BI" user bubble — right-aligned, 28px below AI response 1 */}
           <div
-            className="absolute flex items-center justify-end overflow-clip rounded-[10px] transition-opacity duration-300"
+            className="absolute flex items-center justify-end overflow-clip rounded-[10px]"
             style={{
               background: '#f8f8f8', right: '20px', top: '306px',
               padding: '6.5px 20px 5.5px',
@@ -302,7 +302,7 @@ export default function FrameBI({
 
           {/* AI forwarding response — left-aligned, 28px below forward bubble */}
           <div
-            className="absolute flex items-start overflow-clip rounded-[10px] transition-opacity duration-700"
+            className="absolute flex items-start overflow-clip rounded-[10px]"
             style={{ left: '1247.18px', top: '396px', padding: '0px 20px 0px', opacity: subScreen === 'email' ? 1 : 0, maxWidth: '480px' }}
           >
             <div style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '405px', lineHeight: 1.5 }}>

@@ -121,7 +121,6 @@ export default function Frame2055246625({
           padding: '9px 31.5px 7.5px', borderRadius: '53.25px', cursor: 'pointer',
           opacity: endSessionVisible ? 1 : 0,
           pointerEvents: endSessionVisible ? 'auto' : 'none',
-          transition: 'opacity 0.5s',
           zIndex: 20,
         }}
       >
@@ -241,7 +240,7 @@ export default function Frame2055246625({
           position: 'absolute', background: '#f8f8f8', borderRadius: '10px',
           left: 'calc(50% + 708px)', top: 'calc(50% - 25.8px)',
           transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px',
-          opacity: scheduleBubbleVisible ? 1 : 0, transition: 'opacity 0.3s',
+          opacity: scheduleBubbleVisible ? 1 : 0,
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>Schedule a meeting for Q3 summary</p>
         </div>
