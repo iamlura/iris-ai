@@ -103,10 +103,10 @@ export default function Frame2055246625({
   return (
     <div
       className="absolute inset-0 transition-opacity duration-700"
-      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#f1f1f1' }}
+      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#F4F4F9' }}
     >
-      {/* Live clock — right-aligned, date above time */}
-      <div className="absolute" style={{ top: '50px', right: '53px', textAlign: 'right' }}>
+      {/* Live clock — right-aligned, date above time, shifted 12px right */}
+      <div className="absolute" style={{ top: '50px', right: '41px', textAlign: 'right' }}>
         <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', opacity: 0.5, lineHeight: 'normal', margin: 0 }}>{date}</p>
         <p style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, fontSize: '36px', opacity: 0.8, lineHeight: 0.91, letterSpacing: '-1.08px', margin: 0 }}>{time}</p>
       </div>
@@ -215,20 +215,20 @@ export default function Frame2055246625({
           borderRadius: '20px 50px 50px 20px',
         }} />
 
-        {/* User prompt bubble */}
+        {/* User prompt bubble — 40px from sidebar top + end session area (≈ top: 140px of sidebar) */}
         <div style={{
           position: 'absolute', background: '#f8f8f8', borderRadius: '10px',
-          left: 'calc(50% + 708px)', top: 'calc(50% - 326.8px)',
-          transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px',
+          left: 'calc(50% + 477.09px)', top: '140px',
+          padding: '6.5px 20px 5.5px', maxWidth: '350px',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>"I need to create Q3 performance summary"</p>
         </div>
 
-        {/* AI response 1 */}
+        {/* AI response 1 — 28px below user bubble */}
         <div style={{
-          position: 'absolute', borderRadius: '20px',
-          left: 'calc(50% + 655.03px)', top: 'calc(50% - 224.8px)',
-          transform: 'translate(-50%, -50%)', height: '88px', padding: '16px 20px 15px',
+          position: 'absolute', borderRadius: '10px',
+          left: 'calc(50% + 444.09px)', top: '228px',
+          padding: '0px 20px 0px',
           display: 'flex', alignItems: 'center',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.404px', lineHeight: 1.5, margin: 0 }}>
@@ -236,21 +236,21 @@ export default function Frame2055246625({
           </p>
         </div>
 
-        {/* Schedule bubble */}
+        {/* Schedule bubble — 28px below AI response 1 */}
         <div style={{
           position: 'absolute', background: '#f8f8f8', borderRadius: '10px',
-          left: 'calc(50% + 708px)', top: 'calc(50% - 122.8px)',
-          transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px',
+          left: 'calc(50% + 477.09px)', top: '394px',
+          padding: '6.5px 20px 5.5px',
           opacity: scheduleBubbleVisible ? 1 : 0, transition: 'opacity 0.3s',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>Schedule a meeting for Q3 summary</p>
         </div>
 
-        {/* AI response 2 — meeting scheduled */}
+        {/* AI response 2 — meeting scheduled, 28px below schedule bubble */}
         <div style={{
-          position: 'absolute', borderRadius: '20px',
-          left: 'calc(50% + 655.03px)', top: 'calc(50% + 76.2px)',
-          transform: 'translate(-50%, -50%)', padding: '16px 20px 15px',
+          position: 'absolute', borderRadius: '10px',
+          left: 'calc(50% + 444.09px)', top: '462px',
+          padding: '0px 20px 0px',
           opacity: subScreen === 'calendar' ? 1 : 0, transition: 'opacity 0.7s',
           display: 'flex', flexDirection: 'column', gap: '5px',
         }}>

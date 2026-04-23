@@ -99,11 +99,11 @@ export default function FrameBI({
   return (
     <div
       className="absolute inset-0 transition-opacity duration-700"
-      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#f1f1f1' }}
+      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none', background: '#F4F4F9' }}
     >
-      {/* Live clock */}
-      <p className="absolute opacity-50 text-[16px]" style={{ fontFamily: "'Google_Sans', sans-serif", top: '50px', right: '129px', lineHeight: 'normal' }}>{date}</p>
-      <p className="absolute opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, top: '72px', right: '53px', lineHeight: 0.91 }}>{time}</p>
+      {/* Live clock — shifted 12px right */}
+      <p className="absolute opacity-50 text-[16px]" style={{ fontFamily: "'Google_Sans', sans-serif", top: '50px', right: '117px', lineHeight: 'normal' }}>{date}</p>
+      <p className="absolute opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, top: '72px', right: '41px', lineHeight: 0.91 }}>{time}</p>
 
       {/* End session button */}
       <button
@@ -205,16 +205,16 @@ export default function FrameBI({
           <div className="absolute rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px]"
             style={{ background: '#797979', height: '947.762px', left: 'calc(50% + 596.18px)', top: 'calc(50% - 1.49px)', transform: 'translate(-50%, -50%)', opacity: 0.1, width: '588.641px' }} />
 
-          {/* User prompt bubble */}
+          {/* User prompt bubble — 40px from top of sidebar */}
           <div className="absolute flex items-center justify-end overflow-clip rounded-[10px]"
-            style={{ background: '#f8f8f8', left: '1425.18px', top: '62.36px', padding: '6.5px 20px 5.5px' }}>
-            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '18px', color: 'black', opacity: 0.8, textAlign: 'center', letterSpacing: '-1.3997px', whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
+            style={{ background: '#f8f8f8', left: '1247.18px', top: '59px', padding: '6.5px 20px 5.5px', maxWidth: '540px' }}>
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', opacity: 0.8, whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
               Create Power BI of this year's earnings
             </p>
           </div>
 
-          {/* AI response */}
-          <div className="absolute flex items-center justify-center overflow-clip rounded-[20px]" style={{ left: '1247.18px', top: '152.41px', padding: '16px 20px 15px' }}>
+          {/* AI response — 28px below user bubble */}
+          <div className="absolute flex items-center justify-center overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '127px', padding: '0px 20px 0px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.4px', lineHeight: 1.5, margin: 0 }}>
               Collected this year's earning data. Please confirm if these are the documents you wish to include.
             </p>
@@ -269,39 +269,39 @@ export default function FrameBI({
             </div>
           </div>
 
-          {/* Original prompt bubble */}
+          {/* Original prompt bubble — 40px from top of sidebar */}
           <div className="absolute flex items-center justify-end overflow-clip rounded-[10px]"
-            style={{ background: '#f8f8f8', left: '1425.18px', top: '62.36px', padding: '6.5px 20px 5.5px' }}>
-            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '18px', color: 'black', opacity: 0.8, textAlign: 'center', letterSpacing: '-1.3997px', whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
+            style={{ background: '#f8f8f8', left: '1247.18px', top: '59px', padding: '6.5px 20px 5.5px', maxWidth: '540px' }}>
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', opacity: 0.8, whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
               Create Power BI of this year's earnings
             </p>
           </div>
 
-          {/* AI response 1 */}
-          <div className="absolute flex items-center justify-center overflow-clip rounded-[20px]" style={{ left: '1247.18px', top: '152.41px', padding: '16px 20px 15px' }}>
+          {/* AI response 1 — 28px below user bubble */}
+          <div className="absolute flex items-center justify-center overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '127px', padding: '0px 20px 0px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.4px', lineHeight: 1.5, margin: 0 }}>
               Collected this year's earning data. Please confirm if these are the documents you wish to include.
             </p>
           </div>
 
-          {/* "Forward BI" user bubble */}
+          {/* "Forward BI" user bubble — 28px below AI response 1 */}
           <div
             className="absolute flex items-center justify-end overflow-clip rounded-[10px] transition-opacity duration-300"
             style={{
-              background: '#f8f8f8', left: '1488.18px', top: '306.46px',
+              background: '#f8f8f8', left: '1247.18px', top: '283px',
               padding: '6.5px 20px 5.5px',
               opacity: forwardBubbleVisible ? 1 : 0,
             }}
           >
-            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '18px', color: 'black', opacity: 0.8, textAlign: 'center', letterSpacing: '-1.3997px', whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', opacity: 0.8, whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
               Forward BI to relevant people
             </p>
           </div>
 
-          {/* AI forwarding response */}
+          {/* AI forwarding response — 28px below forward bubble */}
           <div
-            className="absolute flex items-center justify-center overflow-clip rounded-[20px] transition-opacity duration-700"
-            style={{ left: '1247.18px', top: '396.52px', padding: '16px 20px 15px', opacity: subScreen === 'email' ? 1 : 0 }}
+            className="absolute flex items-center justify-center overflow-clip rounded-[10px] transition-opacity duration-700"
+            style={{ left: '1247.18px', top: '351px', padding: '0px 20px 0px', opacity: subScreen === 'email' ? 1 : 0 }}
           >
             <div style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '405px', lineHeight: 1.5 }}>
               <p style={{ margin: '0 0 4px' }}>Forwarding document to relevant people:</p>

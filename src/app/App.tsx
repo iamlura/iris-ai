@@ -44,7 +44,7 @@ export default function App() {
       style={{
         width: '100vw',
         height: '100vh',
-        background: '#f1f1f1',
+        background: '#F4F4F9',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
