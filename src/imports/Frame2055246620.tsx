@@ -278,13 +278,15 @@ function Frame({ onNavigate, onNavigateBi }: { onNavigate?: () => void; onNaviga
         width: `${frameWidth}px`,
         height: `${frameHeight}px`,
         left: leftPosition,
-        top: topPosition
+        top: topPosition,
+        pointerEvents: 'auto',
+        zIndex: 10
       }}
       onClick={handleClick}
     >
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[60px]" style={{ backgroundImage: "linear-gradient(165.864deg, rgba(225, 225, 225, 0.5) 43.108%, rgba(255, 255, 255, 0.5) 102.39%)" }} />
-      <div className="overflow-clip relative rounded-[inherit] size-full" style={{ backdropFilter: 'blur(40px) saturate(180%) contrast(120%)', WebkitBackdropFilter: 'blur(40px) saturate(180%) contrast(120%)' }}>
-      <div className="relative w-full h-full flex items-center px-[94px] py-[28px]" style={{ opacity: contentOpacity, transition: 'opacity 450ms ease-in-out' }}>
+      <div className="overflow-clip relative rounded-[inherit] size-full" style={{ backdropFilter: 'blur(40px) saturate(180%) contrast(120%)', WebkitBackdropFilter: 'blur(40px) saturate(180%) contrast(120%)', pointerEvents: 'none' }}>
+      <div className="relative w-full h-full flex items-center px-[94px] py-[28px]" style={{ opacity: contentOpacity, transition: 'opacity 450ms ease-in-out', pointerEvents: 'auto' }}>
         <span
           ref={measureRef}
           className="absolute invisible whitespace-pre font-['Google_Sans',sans-serif] text-[24.951px] leading-[1.5]"
@@ -305,7 +307,7 @@ function Frame({ onNavigate, onNavigateBi }: { onNavigate?: () => void; onNaviga
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[24.951px] leading-[1.5] text-black caret-black w-full relative z-10"
-              style={{ caretColor: 'black' }}
+              style={{ caretColor: 'black', pointerEvents: 'auto' }}
             />
           </div>
         </div>
