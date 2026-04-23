@@ -231,7 +231,7 @@ function Frame({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') {
+    if (e.key === 'Enter' && inputValue.trim().toLowerCase() === 'create q3 summary') {
       setTimeout(() => {
         setIsFading(true);
         setTimeout(() => {

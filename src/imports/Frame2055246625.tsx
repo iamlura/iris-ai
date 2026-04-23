@@ -42,7 +42,7 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
   }, [visible]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') {
+    if (e.key === 'Enter' && inputValue.trim().toLowerCase().includes('schedule')) {
       setScheduleSentVisible(true);
       setSubScreen('sent');
       setInputValue('');
