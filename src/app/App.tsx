@@ -3,21 +3,6 @@ import Frame2055246620 from '../imports/Frame2055246620';
 import Frame2055246625 from '../imports/Frame2055246625';
 import FrameBI from '../imports/FrameBI';
 
-// Mic icon SVG inline (matches the landing screen Group1 mic)
-function MicIcon() {
-  return (
-    <div style={{ height: '26.934px', width: '13.895px', position: 'relative', flexShrink: 0 }}>
-      <svg style={{ display: 'block', width: '100%', height: '100%' }} fill="none" preserveAspectRatio="none" viewBox="0 0 15.395 27.6821">
-        <g>
-          <rect fill="black" height="16.937" rx="4.36072" width="8.72144" x="3.33629" />
-          <path d="M1.5 13.5C1.5 13.5 1.5 20.5 7.697 20.5C13.894 20.5 13.894 13.5 13.894 13.5" stroke="black" strokeLinecap="round" strokeWidth="1.5" />
-          <path d="M7.69702 20.3245V26.9323" stroke="black" strokeWidth="1.5" />
-          <path d="M4.5 26.9323H10.894" stroke="black" strokeLinecap="round" strokeWidth="1.5" />
-        </g>
-      </svg>
-    </div>
-  );
-}
 
 export default function App() {
   const [showQ3, setShowQ3] = useState(false);
@@ -26,7 +11,6 @@ export default function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [pillShrunk, setPillShrunk] = useState(false);
-  const [textVisible, setTextVisible] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -54,25 +38,24 @@ export default function App() {
   };
 
   const handleReset = () => {
-    // Step 1: show the pill overlay at full card size
-    setResetting(true);
-    setPillShrunk(false);
-    setTextVisible(false);
-
-    // Step 2: after 100ms, trigger the shrink (1000ms duration)
-    setTimeout(() => setPillShrunk(true), 100);
-
-    // Step 3: after shrink completes (100 + 1000ms), fade in text (800ms delay, 1000ms duration)
-    setTimeout(() => setTextVisible(true), 1100);
-
-    // Step 4: after text fully fades in (100 + 1000 + 800 + 1000 = ~2900ms), reset to landing
+    // Step 1: 1 second delay, then show overlay at full card size
     setTimeout(() => {
-      setShowQ3(false);
-      setShowBI(false);
-      setResetting(false);
+      setResetting(true);
       setPillShrunk(false);
       setTextVisible(false);
-    }, 2900);
+
+      // Step 2: 100ms later, trigger shrink (1000ms duration)
+      setTimeout(() => setPillShrunk(true), 100);
+
+      // Step 3: after shrink completes, show landing — pill becomes the Ask Anything bar
+      setTimeout(() => {
+        setShowQ3(false);
+        setShowBI(false);
+        setResetting(false);
+        setPillShrunk(false);
+        setTextVisible(false);
+      }, 1200);
+    }, 1000);
   };
 
   return (
@@ -145,44 +128,18 @@ export default function App() {
               style={{
                 position: 'absolute',
                 left: '50%',
-                // Start: card center top = 50% + 49px. Pill center top = 50%. Animate between them.
                 top: pillShrunk ? '50%' : 'calc(50% + 49px)',
                 transform: 'translate(-50%, -50%)',
-                // Start: card size 1817×990. End: pill size 399.61×94.42
                 width: pillShrunk ? '399.61px' : '1817px',
                 height: pillShrunk ? '94.42px' : '990px',
                 borderRadius: '60px',
                 background: 'rgba(0,0,0,0)',
                 boxShadow: '47px 70px 100px 0px rgba(0,0,0,0.05)',
                 transition: pillShrunk
-                  ? 'width 1000ms ease-in-out, height 1000ms ease-in-out, top 1000ms ease-in-out, border-radius 1000ms ease-in-out'
+                  ? 'width 1000ms ease-in-out, height 1000ms ease-in-out, top 1000ms ease-in-out'
                   : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '22px',
-                overflow: 'hidden',
               }}
-            >
-              {/* |Ask Anything content — fades in after shrink */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '22px',
-                  opacity: textVisible ? 1 : 0,
-                  transition: textVisible ? 'opacity 1000ms ease-in 800ms' : 'none',
-                }}
-              >
-                <MicIcon />
-                <span style={{
-                  fontFamily: "'Google_Sans', sans-serif",
-                  fontSize: '24.951px',
-                  color: 'black',
-                  whiteSpace: 'nowrap',
-                }}>|Ask Anything</span>
-              </div>
-            </div>
+            />
           </div>
         )}
       </div>
