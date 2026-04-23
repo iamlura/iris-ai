@@ -38,23 +38,27 @@ export default function App() {
   };
 
   const handleReset = () => {
-    // Step 1: 1 second delay, then show overlay at full card size
+    // Step 1: 1 second delay
     setTimeout(() => {
+      // Step 2: show overlay at full card size
       setResetting(true);
       setPillShrunk(false);
-      setTextVisible(false);
 
-      // Step 2: 100ms later, trigger shrink (1000ms duration)
-      setTimeout(() => setPillShrunk(true), 100);
+      // Step 3: wait for browser to paint the big pill, then trigger shrink
+      // Double rAF ensures the initial state is painted before transition starts
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setPillShrunk(true);
 
-      // Step 3: after shrink completes, show landing — pill becomes the Ask Anything bar
-      setTimeout(() => {
-        setShowQ3(false);
-        setShowBI(false);
-        setResetting(false);
-        setPillShrunk(false);
-        setTextVisible(false);
-      }, 1200);
+          // Step 4: after shrink completes (1000ms), reset to landing
+          setTimeout(() => {
+            setShowQ3(false);
+            setShowBI(false);
+            setResetting(false);
+            setPillShrunk(false);
+          }, 1000);
+        });
+      });
     }, 1000);
   };
 
@@ -133,7 +137,7 @@ export default function App() {
                 width: pillShrunk ? '399.61px' : '1817px',
                 height: pillShrunk ? '94.42px' : '990px',
                 borderRadius: '60px',
-                background: 'rgba(0,0,0,0)',
+                background: 'white',
                 boxShadow: '47px 70px 100px 0px rgba(0,0,0,0.05)',
                 transition: pillShrunk
                   ? 'width 1000ms ease-in-out, height 1000ms ease-in-out, top 1000ms ease-in-out'
