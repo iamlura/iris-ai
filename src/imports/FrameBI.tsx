@@ -256,7 +256,7 @@ export default function FrameBI({ visible }: { visible: boolean }) {
           {/* ── INPUT BAR — always on top, outside both layers ── */}
           <div
             className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
-            style={{ zIndex: 10 }}
+            style={{ zIndex: 10, pointerEvents: visible ? 'auto' : 'none' }}
             onClick={() => inputRef.current?.focus()}
           >
             <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
