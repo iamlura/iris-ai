@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import imgOutlookSchedule from './outlook-schedule.png';
 
 const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/1b239eff-54bd-4f7b-8be5-e0c666a370c8";
 const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/25652627-0b80-4c64-9d43-723609ac6794";
@@ -21,8 +22,8 @@ const imgGroup1010109849 = "https://www.figma.com/api/mcp/asset/6ff36d7c-fb5b-48
 const imgGroup1010109853 = "https://www.figma.com/api/mcp/asset/1bd4c9c2-9e5a-4cc0-ba87-37f27110059a";
 const imgGroup1010109854 = "https://www.figma.com/api/mcp/asset/49b10716-fbb9-4a2b-9aa5-bdeacf298036";
 
-// Calendar asset for final screen
-const imgCalendar = "https://www.figma.com/api/mcp/asset/45dc4de2-d7ea-43d1-8c03-833f0d909c0b";
+// Outlook schedule image for final calendar screen
+const imgCalendar = imgOutlookSchedule;
 
 type SubScreen = 'q3' | 'sent' | 'calendar';
 
