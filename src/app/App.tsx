@@ -1,17 +1,56 @@
-import { useState, useEffect } from 'react';
-import Frame2055246620 from '../imports/Frame2055246620';
-import Frame2055246625 from '../imports/Frame2055246625';
-import FrameBI from '../imports/FrameBI';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import SessionShell, { Phase, ChatMessage } from './SessionShell';
+import { Q3SummaryLeft, CalendarLeft } from './LeftContentQ3';
+import { BIDocsLeft, BIDashboardLeft, EmailLeft, BIActionButtons } from './LeftContentBI';
 
+/* ===== Timing constants (must match SessionShell) ===== */
+const EXPAND_DELAY = 800;
+const EXPAND_DURATION = 2000;
+const CONTENT_FADE = 800;
+const LEFT_CROSSFADE = 800;
+const END_SESSION_DELAY = 2000;
+const SHRINK_DELAY = 800;
+const SHRINK_DURATION = 2000;
+
+/* ===== Flow state ===== */
+type Flow = 'q3' | 'bi';
+
+/**
+ * Each flow has a sequence of "screens" — user types on landing (or in the
+ * card) and advances to the next screen. After the final screen, the end
+ * session button appears.
+ *
+ * Q3: q3-summary → calendar  (2 screens)
+ * BI: bi-docs → bi-dashboard → bi-email  (3 screens)
+ */
+type Q3Screen = 'q3-summary' | 'calendar';
+type BIScreen = 'bi-docs' | 'bi-dashboard' | 'bi-email';
+type Screen = Q3Screen | BIScreen;
 
 export default function App() {
-  const [showQ3, setShowQ3] = useState(false);
-  const [showBI, setShowBI] = useState(false);
   const [scale, setScale] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [resetting, setResetting] = useState(false);
-  const [pillShrunk, setPillShrunk] = useState(false);
 
+  const [phase, setPhase] = useState<Phase>('landing');
+  const [flow, setFlow] = useState<Flow>('q3');
+  const [screen, setScreen] = useState<Screen>('q3-summary');
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [endSessionVisible, setEndSessionVisible] = useState(false);
+
+  // Track timers so we can cancel on unmount / rapid transitions
+  const timers = useRef<number[]>([]);
+  const addTimer = useCallback((cb: () => void, ms: number) => {
+    const id = window.setTimeout(cb, ms);
+    timers.current.push(id);
+    return id;
+  }, []);
+  const clearTimers = useCallback(() => {
+    timers.current.forEach(id => clearTimeout(id));
+    timers.current = [];
+  }, []);
+  useEffect(() => () => clearTimers(), [clearTimers]);
+
+  /* ===== Responsive scale ===== */
   useEffect(() => {
     const update = () => {
       const sx = window.innerWidth / 1920;
@@ -37,32 +76,219 @@ export default function App() {
     }
   };
 
-  const handleReset = () => {
-    // Step 1: 1 second delay
-    setTimeout(() => {
-      // Step 2: show overlay covering the screen at full card size
-      setResetting(true);
-      setPillShrunk(false);
+  /* ===== Flow data helpers ===== */
 
-      // Step 3: double rAF so browser paints big pill before transition fires
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setPillShrunk(true);
+  const pushMessages = useCallback((...msgs: ChatMessage[]) => {
+    setChatMessages(prev => [...prev, ...msgs]);
+  }, []);
 
-          // Step 4: shrink takes 1000ms — swap to landing while overlay still covers
-          setTimeout(() => {
-            setShowQ3(false);
-            setShowBI(false);
-            // Step 5: tiny delay so landing pill is rendered, then drop overlay
-            setTimeout(() => {
-              setResetting(false);
-              setPillShrunk(false);
-            }, 50);
-          }, 1000);
+  /** Schedule the AI reply for a given screen, after the user's bubble lands */
+  const scheduleAIReply = useCallback((screenKey: Screen, delayMs: number) => {
+    addTimer(() => {
+      let aiMsg: ChatMessage | null = null;
+      switch (screenKey) {
+        case 'q3-summary':
+          aiMsg = {
+            id: 'ai-q3-confirm',
+            role: 'ai',
+            text: 'A document containing all the projects worked on this quarter was made. Please confirm if you are fine with it or delete documents you wish to remove',
+          };
+          break;
+        case 'calendar':
+          aiMsg = {
+            id: 'ai-q3-scheduled',
+            role: 'ai',
+            text: (
+              <>
+                <p style={{ margin: 0 }}>Meeting was scheduled for Q3 summary with 85 invitees</p>
+                <p style={{ margin: '5px 0 0', fontSize: '11px', opacity: 0.5, textDecoration: 'underline' }}>see invitees</p>
+              </>
+            ),
+          };
+          break;
+        case 'bi-docs':
+          aiMsg = {
+            id: 'ai-bi-collected',
+            role: 'ai',
+            text: "Collected this year's earning data. Please confirm if these are the documents you wish to include.",
+          };
+          break;
+        case 'bi-email':
+          aiMsg = {
+            id: 'ai-bi-forwarding',
+            role: 'ai',
+            text: (
+              <>
+                <p style={{ margin: '0 0 4px' }}>Forwarding document to relevant people:</p>
+                <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                  <li>Tom C (Finance Rep.) &lt;tom.c@hp.com&gt;</li>
+                  <li>Jesse M (Accounting Rep.) &lt;jesse.m@hp.com&gt;</li>
+                  <li>Chris H (Sales Rep.) &lt;chris.h@hp.com&gt;</li>
+                </ul>
+              </>
+            ),
+          };
+          break;
+      }
+      if (aiMsg) pushMessages(aiMsg);
+    }, delayMs);
+  }, [addTimer, pushMessages]);
+
+  /** Show end session button after a delay */
+  const scheduleEndSessionButton = useCallback((delayMs: number) => {
+    addTimer(() => setEndSessionVisible(true), delayMs);
+  }, [addTimer]);
+
+  /* ===== Expand from landing into flow ===== */
+  const handleLandingSubmit = useCallback((text: string) => {
+    clearTimers();
+
+    // Step 1: 800ms delay before anything happens
+    addTimer(() => {
+      // Step 2: Start expanding (2000ms animation)
+      setPhase('expanding');
+
+      addTimer(() => {
+        // Step 3: Phase → content. Left-content + first user bubble appear.
+        setPhase('content');
+
+        // User's opening prompt, canonicalized per flow
+        const openingText = flow === 'q3'
+          ? '"I need to create Q3 performance summary"'
+          : 'Create Power BI of this year\'s earnings';
+
+        pushMessages({
+          id: flow === 'q3' ? 'user-q3-open' : 'user-bi-open',
+          role: 'user',
+          text: openingText,
         });
-      });
-    }, 1000);
-  };
+
+        // Show initial screen
+        setScreen(flow === 'q3' ? 'q3-summary' : 'bi-docs');
+
+        // AI reply ~800ms after user bubble lands (to match content fade-in)
+        scheduleAIReply(flow === 'q3' ? 'q3-summary' : 'bi-docs', CONTENT_FADE + 400);
+      }, EXPAND_DURATION);
+    }, EXPAND_DELAY);
+
+    // The opening input text is ignored visually (we always show canonical
+    // bubble text per flow) — matches user's "whatever they type advances"
+    void text;
+  }, [addTimer, clearTimers, flow, pushMessages, scheduleAIReply]);
+
+  /* ===== BI flow: advance docs → dashboard (via "Create BI" click or prompt) ===== */
+  const advanceToDashboard = useCallback(() => {
+    setScreen('bi-dashboard');
+  }, []);
+
+  /* ===== BI flow: advance dashboard → email (via "share" click or "forward" prompt) ===== */
+  const advanceToEmail = useCallback(() => {
+    pushMessages({
+      id: 'user-bi-forward',
+      role: 'user',
+      text: 'Forward BI to relevant people',
+    });
+    addTimer(() => setScreen('bi-email'), 400);
+    scheduleAIReply('bi-email', 400 + LEFT_CROSSFADE);
+    scheduleEndSessionButton(400 + LEFT_CROSSFADE + END_SESSION_DELAY);
+  }, [addTimer, pushMessages, scheduleAIReply, scheduleEndSessionButton]);
+
+  /* ===== Q3 flow: advance q3-summary → calendar (via prompt) ===== */
+  const advanceToCalendar = useCallback(() => {
+    pushMessages({
+      id: 'user-q3-schedule',
+      role: 'user',
+      text: 'Schedule a meeting for Q3 summary',
+    });
+    addTimer(() => setScreen('calendar'), 400);
+    scheduleAIReply('calendar', 400 + LEFT_CROSSFADE);
+    scheduleEndSessionButton(400 + LEFT_CROSSFADE + END_SESSION_DELAY);
+  }, [addTimer, pushMessages, scheduleAIReply, scheduleEndSessionButton]);
+
+  /* ===== Handle user typing prompts inside the expanded card ===== */
+  const handleInCardSubmit = useCallback((text: string) => {
+    if (flow === 'q3' && screen === 'q3-summary') {
+      advanceToCalendar();
+      return;
+    }
+    if (flow === 'bi' && screen === 'bi-docs') {
+      // Typing anything in docs view advances like "Create BI" click
+      advanceToDashboard();
+      return;
+    }
+    if (flow === 'bi' && screen === 'bi-dashboard') {
+      advanceToEmail();
+      return;
+    }
+    void text;
+  }, [flow, screen, advanceToCalendar, advanceToDashboard, advanceToEmail]);
+
+  /* ===== Combined submit handler routed by phase ===== */
+  const onSubmit = useCallback((text: string) => {
+    if (phase === 'landing') {
+      handleLandingSubmit(text);
+    } else if (phase === 'content') {
+      handleInCardSubmit(text);
+    }
+  }, [phase, handleLandingSubmit, handleInCardSubmit]);
+
+  /* ===== End session: shrink + loop back to landing =====
+   *
+   * Sequence (timings from user spec):
+   *   1. endSession click → phase='ending'
+   *      - large content fades out (CONTENT_FADE=800ms)
+   *      - pill stays large
+   *   2. after CONTENT_FADE (800ms): content is blank, pill is large.
+   *      Hold for SHRINK_DELAY (800ms) — the "bubble turns blank" moment.
+   *   3. after CONTENT_FADE+SHRINK_DELAY (1600ms): phase='shrinking'
+   *      - pill shrinks to small (SHRINK_DURATION=2000ms)
+   *      - clear chat/screen, flip flow so next landing enters the other flow
+   *   4. after SHRINK_DURATION (2000ms more): phase='landing'
+   *      - landing content (|Ask Anything) fades in (CONTENT_FADE=800ms)
+   */
+  const handleEndSession = useCallback(() => {
+    clearTimers();
+    setEndSessionVisible(false);
+
+    setPhase('ending');
+
+    addTimer(() => {
+      // Reset session data while pill is blank & still large — not visible yet
+      setChatMessages([]);
+      setFlow(prev => (prev === 'q3' ? 'bi' : 'q3'));
+      // screen will be set on next expand, but give it a sane default
+      setScreen(flow === 'q3' ? 'bi-docs' : 'q3-summary');
+
+      setPhase('shrinking');
+
+      addTimer(() => {
+        setPhase('landing');
+      }, SHRINK_DURATION);
+    }, CONTENT_FADE + SHRINK_DELAY);
+  }, [addTimer, clearTimers, flow]);
+
+  /* ===== Build leftContents map for current flow ===== */
+  const leftContents = flow === 'q3'
+    ? {
+        'q3-summary': <Q3SummaryLeft />,
+        'calendar': <CalendarLeft />,
+      }
+    : {
+        'bi-docs': <BIDocsLeft />,
+        'bi-dashboard': <BIDashboardLeft />,
+        'bi-email': <EmailLeft />,
+      };
+
+  /* ===== BI action buttons (left overlay) ===== */
+  const leftOverlay = flow === 'bi' && phase === 'content'
+    ? (
+        screen === 'bi-docs' ? (
+          <BIActionButtons variant="edit-createbi" onCreateBI={advanceToDashboard} />
+        ) : screen === 'bi-dashboard' ? (
+          <BIActionButtons variant="edit-share" onShare={advanceToEmail} />
+        ) : null
+      )
+    : null;
 
   return (
     <div
@@ -102,52 +328,17 @@ export default function App() {
           {isFullscreen ? '✕' : '⤢'}
         </button>
 
-        {/* Landing */}
-        <div
-          className="absolute inset-0"
-          style={{ opacity: showQ3 || showBI ? 0 : 1, pointerEvents: showQ3 || showBI ? 'none' : 'auto' }}
-        >
-          <Frame2055246620
-            onNavigate={() => setShowQ3(true)}
-            onNavigateBi={() => setShowBI(true)}
-          />
-        </div>
-
-        {/* Q3 Summary / Calendar screen */}
-        <Frame2055246625 visible={showQ3} onReset={handleReset} />
-
-        {/* Collection of Documents / BI / Email screen */}
-        <FrameBI visible={showBI} onReset={handleReset} />
-
-        {/* End-session shrink animation overlay */}
-        {resetting && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: '#F4F4F9',
-              zIndex: 50,
-              pointerEvents: 'none',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: pillShrunk ? '50%' : 'calc(50% + 49px)',
-                transform: 'translate(-50%, -50%)',
-                width: pillShrunk ? '399.61px' : '1817px',
-                height: pillShrunk ? '94.42px' : '990px',
-                borderRadius: '60px',
-                background: 'white',
-                boxShadow: '47px 70px 100px 0px rgba(0,0,0,0.05)',
-                transition: pillShrunk
-                  ? 'width 1000ms ease-in-out, height 1000ms ease-in-out, top 1000ms ease-in-out'
-                  : 'none',
-              }}
-            />
-          </div>
-        )}
+        <SessionShell
+          phase={phase}
+          flow={flow}
+          leftContentKey={screen}
+          leftContents={leftContents}
+          chatMessages={chatMessages}
+          endSessionVisible={endSessionVisible}
+          onSubmit={onSubmit}
+          onEndSession={handleEndSession}
+          leftOverlay={leftOverlay}
+        />
       </div>
     </div>
   );
