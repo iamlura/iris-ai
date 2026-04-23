@@ -47,13 +47,12 @@ const CARD_TOP = 222.395;
 const CARD_W = 1816.5;
 const CARD_H = 823.61;
 // Input bar inside right sidebar: card-relative center x=677.09, y=356.59 from card center
-// Card center y = 634.2 → input abs top = 634.2 + 356.59 - 94.42/2 = ~943.5
-// But Figma says top-of-card=222.4, card-center-y=634.2
-// input bar top (abs) = CARD_TOP + CARD_H/2 + 356.59 - 11 (half bar height ~22) ≈ 222.4+411.8+356.59-11 = 979.8
-// Let's use exact Figma: input bar top=896.16 within the scroll wrapper which starts at top=154
-// So abs top = 154 + 897 - 111.2(scroll offset) = ~940 → let's just use 900px from top of screen
-const INPUT_ABS_TOP = 154 + 897 - 111; // ≈ 940
-const INPUT_ABS_LEFT = CARD_LEFT + CARD_W / 2 + 677.09 - 396 / 2; // right sidebar center - half width
+// Right sidebar: left edge = CARD_LEFT + CARD_W - 433.75 = 51.75+1816.5-433.75 = 1434.5
+// Sidebar center X = 1434.5 + 433.75/2 = 1651.4
+// Input width = 396px → left = 1651.4 - 198 = 1453.4
+// Input top: card bottom (1046) - 44px bar height - 25px margin = 977
+const INPUT_ABS_TOP = 977;
+const INPUT_ABS_LEFT = 1453;
 
 export default function Frame2055246625({
   visible,
