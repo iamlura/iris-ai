@@ -27,9 +27,9 @@ function useLiveClock() {
 function Group() {
   const { date, time } = useLiveClock();
   return (
-    <div className="absolute contents left-[1771px] not-italic text-black top-[50px] whitespace-nowrap">
-      <p className="absolute font-['Google_Sans',sans-serif] leading-[normal] left-[1791px] opacity-50 text-[16px] top-[50px]">{date}</p>
-      <p className="absolute font-['Google_Sans',sans-serif] leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">{time}</p>
+    <div className="absolute not-italic text-black whitespace-nowrap" style={{ top: '50px', right: '41px', textAlign: 'right' }}>
+      <p className="font-['Google_Sans',sans-serif] leading-[normal] opacity-50 text-[16px]" style={{ margin: 0 }}>{date}</p>
+      <p className="font-['Google_Sans',sans-serif] leading-[0.91] opacity-80 text-[36px] tracking-[-1.08px]" style={{ fontWeight: 500, margin: 0 }}>{time}</p>
     </div>
   );
 }

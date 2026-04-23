@@ -215,20 +215,20 @@ export default function Frame2055246625({
           borderRadius: '20px 50px 50px 20px',
         }} />
 
-        {/* User prompt bubble — 40px from sidebar top + end session area (≈ top: 140px of sidebar) */}
+        {/* User prompt bubble — right-aligned, exact Figma position */}
         <div style={{
           position: 'absolute', background: '#f8f8f8', borderRadius: '10px',
-          left: 'calc(50% + 477.09px)', top: '140px',
-          padding: '6.5px 20px 5.5px', maxWidth: '350px',
+          left: 'calc(50% + 708px)', top: 'calc(50% - 229.8px)',
+          transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>"I need to create Q3 performance summary"</p>
         </div>
 
-        {/* AI response 1 — 28px below user bubble */}
+        {/* AI response 1 — left-aligned, exact Figma position */}
         <div style={{
-          position: 'absolute', borderRadius: '10px',
-          left: 'calc(50% + 444.09px)', top: '228px',
-          padding: '0px 20px 0px',
+          position: 'absolute', borderRadius: '20px',
+          left: 'calc(50% + 655.03px)', top: 'calc(50% - 127.8px)',
+          transform: 'translate(-50%, -50%)', height: '88px', padding: '16px 20px 15px',
           display: 'flex', alignItems: 'center',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.404px', lineHeight: 1.5, margin: 0 }}>
@@ -236,21 +236,21 @@ export default function Frame2055246625({
           </p>
         </div>
 
-        {/* Schedule bubble — 28px below AI response 1 */}
+        {/* Schedule bubble — right-aligned, exact Figma position */}
         <div style={{
           position: 'absolute', background: '#f8f8f8', borderRadius: '10px',
-          left: 'calc(50% + 477.09px)', top: '394px',
-          padding: '6.5px 20px 5.5px',
+          left: 'calc(50% + 708px)', top: 'calc(50% - 25.8px)',
+          transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px',
           opacity: scheduleBubbleVisible ? 1 : 0, transition: 'opacity 0.3s',
         }}>
           <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>Schedule a meeting for Q3 summary</p>
         </div>
 
-        {/* AI response 2 — meeting scheduled, 28px below schedule bubble */}
+        {/* AI response 2 — left-aligned, exact Figma position */}
         <div style={{
-          position: 'absolute', borderRadius: '10px',
-          left: 'calc(50% + 444.09px)', top: '462px',
-          padding: '0px 20px 0px',
+          position: 'absolute', borderRadius: '20px',
+          left: 'calc(50% + 655.03px)', top: 'calc(50% + 76.2px)',
+          transform: 'translate(-50%, -50%)', padding: '16px 20px 15px',
           opacity: subScreen === 'calendar' ? 1 : 0, transition: 'opacity 0.7s',
           display: 'flex', flexDirection: 'column', gap: '5px',
         }}>

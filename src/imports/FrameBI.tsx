@@ -205,16 +205,16 @@ export default function FrameBI({
           <div className="absolute rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px]"
             style={{ background: '#797979', height: '947.762px', left: 'calc(50% + 596.18px)', top: 'calc(50% - 1.49px)', transform: 'translate(-50%, -50%)', opacity: 0.1, width: '588.641px' }} />
 
-          {/* User prompt bubble — 40px from top of sidebar */}
+          {/* User prompt bubble — right-aligned within sidebar */}
           <div className="absolute flex items-center justify-end overflow-clip rounded-[10px]"
-            style={{ background: '#f8f8f8', left: '1247.18px', top: '59px', padding: '6.5px 20px 5.5px', maxWidth: '540px' }}>
+            style={{ background: '#f8f8f8', right: '20px', top: '62px', padding: '6.5px 20px 5.5px', maxWidth: '480px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', opacity: 0.8, whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
               Create Power BI of this year's earnings
             </p>
           </div>
 
-          {/* AI response — 28px below user bubble */}
-          <div className="absolute flex items-center justify-center overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '127px', padding: '0px 20px 0px' }}>
+          {/* AI response — left-aligned within sidebar, 28px below user bubble */}
+          <div className="absolute flex items-start overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '152px', padding: '0px 20px 0px', maxWidth: '480px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.4px', lineHeight: 1.5, margin: 0 }}>
               Collected this year's earning data. Please confirm if these are the documents you wish to include.
             </p>
@@ -269,26 +269,26 @@ export default function FrameBI({
             </div>
           </div>
 
-          {/* Original prompt bubble — 40px from top of sidebar */}
+          {/* Original prompt bubble — right-aligned within sidebar */}
           <div className="absolute flex items-center justify-end overflow-clip rounded-[10px]"
-            style={{ background: '#f8f8f8', left: '1247.18px', top: '59px', padding: '6.5px 20px 5.5px', maxWidth: '540px' }}>
+            style={{ background: '#f8f8f8', right: '20px', top: '62px', padding: '6.5px 20px 5.5px', maxWidth: '480px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', opacity: 0.8, whiteSpace: 'nowrap', lineHeight: 1.5, margin: 0 }}>
               Create Power BI of this year's earnings
             </p>
           </div>
 
-          {/* AI response 1 — 28px below user bubble */}
-          <div className="absolute flex items-center justify-center overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '127px', padding: '0px 20px 0px' }}>
+          {/* AI response 1 — left-aligned, 28px below user bubble */}
+          <div className="absolute flex items-start overflow-clip rounded-[10px]" style={{ left: '1247.18px', top: '152px', padding: '0px 20px 0px', maxWidth: '480px' }}>
             <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.4px', lineHeight: 1.5, margin: 0 }}>
               Collected this year's earning data. Please confirm if these are the documents you wish to include.
             </p>
           </div>
 
-          {/* "Forward BI" user bubble — 28px below AI response 1 */}
+          {/* "Forward BI" user bubble — right-aligned, 28px below AI response 1 */}
           <div
             className="absolute flex items-center justify-end overflow-clip rounded-[10px] transition-opacity duration-300"
             style={{
-              background: '#f8f8f8', left: '1247.18px', top: '283px',
+              background: '#f8f8f8', right: '20px', top: '306px',
               padding: '6.5px 20px 5.5px',
               opacity: forwardBubbleVisible ? 1 : 0,
             }}
@@ -298,10 +298,10 @@ export default function FrameBI({
             </p>
           </div>
 
-          {/* AI forwarding response — 28px below forward bubble */}
+          {/* AI forwarding response — left-aligned, 28px below forward bubble */}
           <div
-            className="absolute flex items-center justify-center overflow-clip rounded-[10px] transition-opacity duration-700"
-            style={{ left: '1247.18px', top: '351px', padding: '0px 20px 0px', opacity: subScreen === 'email' ? 1 : 0 }}
+            className="absolute flex items-start overflow-clip rounded-[10px] transition-opacity duration-700"
+            style={{ left: '1247.18px', top: '396px', padding: '0px 20px 0px', opacity: subScreen === 'email' ? 1 : 0, maxWidth: '480px' }}
           >
             <div style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '405px', lineHeight: 1.5 }}>
               <p style={{ margin: '0 0 4px' }}>Forwarding document to relevant people:</p>
