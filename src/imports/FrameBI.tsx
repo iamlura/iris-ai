@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import imgBiDashboard from './bi-image.png';
+import imgOutlookEmail from './outlook-email.png';
 
 // Fresh Figma MCP asset URLs (valid ~7 days from generation)
 const imgRectangle3473812 = "https://www.figma.com/api/mcp/asset/ff02b34c-df96-45c4-bde5-db24e38e0c2f";
@@ -14,23 +16,41 @@ const imgRectangle3473819 = "https://www.figma.com/api/mcp/asset/62aae8b2-01d3-4
 const imgRectangle3473823 = "https://www.figma.com/api/mcp/asset/4b47c7e8-5d32-43fc-9824-106b5b25fe53";
 const imgGroup1010109849 = "https://www.figma.com/api/mcp/asset/072a9ee3-16d6-4249-a1ce-683a0c82b5c2";
 
+type SubScreen = 'docs' | 'bi' | 'email';
+
 export default function FrameBI({ visible }: { visible: boolean }) {
+  const [subScreen, setSubScreen] = useState<SubScreen>('docs');
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [sendBubbleVisible, setSendBubbleVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (visible) {
+      setSubScreen('docs');
       setInputValue('');
-      setConfirmVisible(false);
+      setSendBubbleVisible(false);
     }
   }, [visible]);
 
+  const handleCreateBI = () => {
+    setTimeout(() => {
+      setSubScreen('bi');
+    }, 1000);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
-      setConfirmVisible(true);
-      setInputValue('');
+      const val = inputValue.trim().toLowerCase();
+      if (val.includes('send') && val.includes('bi')) {
+        setSendBubbleVisible(true);
+        setInputValue('');
+        setTimeout(() => {
+          setSubScreen('email');
+        }, 1000);
+      } else {
+        setInputValue('');
+      }
     }
   };
 
@@ -47,150 +67,224 @@ export default function FrameBI({ visible }: { visible: boolean }) {
           <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">08:58</p>
         </div>
 
-        {/* Main expanded card — exactly as in Figma node 1:3562 */}
+        {/* Main expanded card */}
         <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[rgba(0,0,0,0)] h-[990px] left-[calc(50%+0.5px)] overflow-clip rounded-[60px] shadow-[47px_70px_100px_0px_rgba(0,0,0,0.05)] top-[calc(50%+49px)] w-[1817px]">
 
-          {/* Top-right action buttons: edit + Create BI */}
-          <div className="absolute content-stretch flex gap-[16px] items-center left-[872.2px] top-[68.11px]">
-            <div className="bg-[#515c72] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
-              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
-                <p className="leading-[1.5]">edit</p>
-              </div>
-            </div>
-            <div className="bg-[#034bd8] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0 cursor-pointer">
-              <div className="flex flex-col font-['Google_Sans',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
-                <p className="leading-[1.5]">Create BI</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Title: Collection of Documents / 2025-2026 */}
-          <div className="absolute contents font-['Google_Sans',sans-serif] font-bold leading-[0] left-[70.03px] not-italic text-black top-[62.36px] whitespace-nowrap">
-            <div className="-translate-y-1/2 absolute flex flex-col justify-center left-[70.03px] opacity-80 text-[20px] top-[77.36px]">
-              <p className="leading-[1.5]">Collection of Documents</p>
-            </div>
-            <div className="-translate-y-1/2 absolute flex flex-col justify-center left-[70.03px] opacity-80 text-[48px] top-[116.36px]">
-              <p className="leading-[1.5]">2025-2026</p>
-            </div>
-          </div>
-
-          {/* Document grid — 4 columns × 3 rows, pixel-perfect from Figma */}
-          <div className="absolute h-[815px] left-[70px] overflow-clip top-[176.24px] w-[1062px]">
-            {/* Col 0 */}
-            <div className="absolute h-[314.715px] left-0 opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-[119.94%] left-[-6.6%] max-w-none top-[-12.67%] w-[230.06%]" src={imgRectangle3473812} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[0.03px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[200.92%]" src={imgRectangle3473815} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[0.03px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[309.82%]" src={imgRectangle3473820} />
-              </div>
-            </div>
-            {/* Col 1 */}
-            <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-[-3.31%] max-w-none top-0 w-[206.61%]" src={imgRectangle3473813} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-[-100.92%] max-w-none top-0 w-[200.92%]" src={imgRectangle3473815} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473821} />
-            </div>
-            {/* Col 2 */}
-            <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-[-5.89%] max-w-none top-0 w-[274.65%]" src={imgRectangle3473814} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473817} />
-            </div>
-            <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473822} />
-            </div>
-            {/* Col 3 */}
-            <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473818} />
-            </div>
-            <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
-                <img alt="" className="absolute h-full left-[-8.01%] max-w-none top-0 w-[229.57%]" src={imgRectangle3473819} />
-              </div>
-            </div>
-            <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473823} />
-            </div>
-          </div>
-
-          {/* Right sidebar bg */}
-          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[947.762px] left-[calc(50%+596.18px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-1.49px)] w-[588.641px]" />
-
-          {/* Right: user prompt bubble */}
-          <div className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[62.36px]">
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic opacity-80 relative shrink-0 text-[18px] text-black text-center tracking-[-1.3997px] whitespace-nowrap">
-              <p className="leading-[1.5]">Create Power BI of this year's earnings</p>
-            </div>
-          </div>
-
-          {/* Right: AI response */}
-          <div className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[152.41px]">
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.4px]">
-              <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include. `}</p>
-            </div>
-          </div>
-
-          {/* Right: user confirm bubble — appears after typing anything */}
+          {/* ── LAYER 1: Collection of Documents (docs screen) ── */}
           <div
-            className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[260px] transition-opacity duration-300"
-            style={{ opacity: confirmVisible ? 1 : 0 }}
+            className="absolute inset-0 transition-opacity duration-700"
+            style={{ opacity: subScreen === 'docs' ? 1 : 0, pointerEvents: subScreen === 'docs' ? 'auto' : 'none' }}
           >
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[281px]">
-              <p className="leading-[1.5]">Yes, include all documents</p>
+            {/* Top-right action buttons */}
+            <div className="absolute content-stretch flex gap-[16px] items-center left-[872.2px] top-[68.11px]">
+              <div className="bg-[#515c72] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
+                <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
+                  <p className="leading-[1.5]">edit</p>
+                </div>
+              </div>
+              <div
+                className="bg-[#034bd8] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0 cursor-pointer"
+                onClick={handleCreateBI}
+              >
+                <div className="flex flex-col font-['Google_Sans',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
+                  <p className="leading-[1.5]">Create BI</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Title */}
+            <div className="absolute contents font-['Google_Sans',sans-serif] font-bold leading-[0] left-[70.03px] not-italic text-black top-[62.36px] whitespace-nowrap">
+              <div className="-translate-y-1/2 absolute flex flex-col justify-center left-[70.03px] opacity-80 text-[20px] top-[77.36px]">
+                <p className="leading-[1.5]">Collection of Documents</p>
+              </div>
+              <div className="-translate-y-1/2 absolute flex flex-col justify-center left-[70.03px] opacity-80 text-[48px] top-[116.36px]">
+                <p className="leading-[1.5]">2025-2026</p>
+              </div>
+            </div>
+
+            {/* Document grid */}
+            <div className="absolute h-[815px] left-[70px] overflow-clip top-[176.24px] w-[1062px]">
+              {/* Col 0 */}
+              <div className="absolute h-[314.715px] left-0 opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-[119.94%] left-[-6.6%] max-w-none top-[-12.67%] w-[230.06%]" src={imgRectangle3473812} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[0.03px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[200.92%]" src={imgRectangle3473815} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[0.03px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[309.82%]" src={imgRectangle3473820} />
+                </div>
+              </div>
+              {/* Col 1 */}
+              <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-[-3.31%] max-w-none top-0 w-[206.61%]" src={imgRectangle3473813} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-[-100.92%] max-w-none top-0 w-[200.92%]" src={imgRectangle3473815} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[272.74px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473821} />
+              </div>
+              {/* Col 2 */}
+              <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-[-5.89%] max-w-none top-0 w-[274.65%]" src={imgRectangle3473814} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473817} />
+              </div>
+              <div className="absolute h-[314.715px] left-[545.45px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473822} />
+              </div>
+              {/* Col 3 */}
+              <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[0.07px] w-[243.712px]">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473818} />
+              </div>
+              <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[342.79px] w-[243.712px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[31px]">
+                  <img alt="" className="absolute h-full left-[-8.01%] max-w-none top-0 w-[229.57%]" src={imgRectangle3473819} />
+                </div>
+              </div>
+              <div className="absolute h-[314.715px] left-[818.16px] opacity-60 rounded-[31px] top-[682.96px] w-[243.712px]">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[31px] size-full" src={imgRectangle3473823} />
+              </div>
+            </div>
+
+            {/* Right sidebar bg */}
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[947.762px] left-[calc(50%+596.18px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-1.49px)] w-[588.641px]" />
+
+            {/* Right: user prompt bubble */}
+            <div className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[62.36px]">
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic opacity-80 relative shrink-0 text-[18px] text-black text-center tracking-[-1.3997px] whitespace-nowrap">
+                <p className="leading-[1.5]">Create Power BI of this year's earnings</p>
+              </div>
+            </div>
+
+            {/* Right: AI response */}
+            <div className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[152.41px]">
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.4px]">
+                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include. `}</p>
+              </div>
             </div>
           </div>
 
-          {/* Right: bottom "Ask Anything" input bar */}
+          {/* ── LAYER 2: BI Dashboard (bi screen) ── */}
           <div
-            className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
-            onClick={() => inputRef.current?.focus()}
+            className="absolute inset-0 transition-opacity duration-700"
+            style={{ opacity: subScreen === 'bi' || subScreen === 'email' ? 1 : 0, pointerEvents: subScreen === 'bi' || subScreen === 'email' ? 'auto' : 'none' }}
           >
-            <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
-              <div className="absolute inset-[0_-5.4%_-2.77%_-5.4%]">
-                <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
-              </div>
-            </div>
-            <div className="relative flex-1">
-              {inputValue === '' && (
-                <span
-                  className="absolute top-0 left-0 font-['Google_Sans',sans-serif] text-[16px] text-black leading-[1.5] pointer-events-none transition-opacity duration-200"
-                  style={{ opacity: isFocused ? 0.3 : 1 }}
-                >
-                  |Ask Anything
-                </span>
-              )}
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                onKeyDown={handleKeyDown}
-                className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
-                style={{ caretColor: 'black' }}
+            {/* Left+center: BI dashboard image */}
+            <div
+              className="absolute top-0 left-0 h-full transition-opacity duration-700"
+              style={{ width: '1200px', opacity: subScreen === 'email' ? 0 : 1 }}
+            >
+              <img
+                alt="Fiscal Year BI Dashboard"
+                className="absolute inset-0 w-full h-full object-cover object-left-top rounded-tl-[60px] rounded-bl-[60px]"
+                src={imgBiDashboard}
               />
             </div>
+
+            {/* Left+center: Outlook email image (crossfades in over BI) */}
+            <div
+              className="absolute top-0 left-0 h-full transition-opacity duration-700"
+              style={{ width: '1200px', opacity: subScreen === 'email' ? 1 : 0 }}
+            >
+              <img
+                alt="Outlook Email"
+                className="absolute inset-0 w-full h-full object-cover object-left-top rounded-tl-[60px] rounded-bl-[60px]"
+                src={imgOutlookEmail}
+              />
+            </div>
+
+            {/* Right sidebar bg */}
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[947.762px] left-[calc(50%+596.18px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-1.49px)] w-[588.641px]" />
+
+            {/* Right: edit + share buttons */}
+            <div className="absolute content-stretch flex gap-[16px] items-center left-[872.2px] top-[68.11px]">
+              <div className="bg-[#515c72] content-stretch flex items-center justify-center pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
+                <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
+                  <p className="leading-[1.5]">edit</p>
+                </div>
+              </div>
+              <div className="bg-[#034bd8] content-stretch flex items-center justify-center gap-[8px] pb-[6px] pt-[7.2px] px-[25.2px] relative rounded-[42.6px] shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" className="shrink-0">
+                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                </svg>
+                <div className="flex flex-col font-['Google_Sans',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[21.6px] text-white whitespace-nowrap">
+                  <p className="leading-[1.5]">share</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: original user prompt */}
+            <div className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[62.36px]">
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic opacity-80 relative shrink-0 text-[18px] text-black text-center tracking-[-1.3997px] whitespace-nowrap">
+                <p className="leading-[1.5]">Create Power BI of this year's earnings</p>
+              </div>
+            </div>
+
+            {/* Right: AI response */}
+            <div className="absolute content-stretch flex items-center justify-center left-[1247.18px] overflow-clip pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[152.41px]">
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.4px]">
+                <p className="leading-[1.5]">{`Collected this year's earning data. Please confirm if these are the documents you wish to include. `}</p>
+              </div>
+            </div>
+
+            {/* Right: "Forward BI to relevant people" bubble — appears after send */}
+            <div
+              className="absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[1425.18px] overflow-clip pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[270px] transition-opacity duration-300"
+              style={{ opacity: sendBubbleVisible ? 1 : 0 }}
+            >
+              <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[281px]">
+                <p className="leading-[1.5]">Forward BI to relevant people</p>
+              </div>
+            </div>
+
+            {/* Right: input bar */}
+            <div
+              className="-translate-x-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+593.18px)] px-[27px] py-[11px] rounded-[36px] top-[896.16px] w-[509px] cursor-text"
+              onClick={() => inputRef.current?.focus()}
+            >
+              <div className="h-[15.15px] relative shrink-0 w-[7.816px]">
+                <div className="absolute inset-[0_-5.4%_-2.77%_-5.4%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
+                </div>
+              </div>
+              <div className="relative flex-1">
+                {inputValue === '' && (
+                  <span
+                    className="absolute top-0 left-0 font-['Google_Sans',sans-serif] text-[16px] text-black leading-[1.5] pointer-events-none transition-opacity duration-200"
+                    style={{ opacity: isFocused ? 0.3 : 1 }}
+                  >
+                    |Ask Anything
+                  </span>
+                )}
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  onKeyDown={handleKeyDown}
+                  className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
+                  style={{ caretColor: 'black' }}
+                />
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
