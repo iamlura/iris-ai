@@ -13,11 +13,23 @@ import imgRectangle3473822 from "./image-0.png";
 import imgRectangle3473819 from "./image-1.png";
 import imgRectangle3473823 from "./image-2.png";
 
+function useLiveClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const date = now.toLocaleDateString('en-CA').replace(/-/g, '.');
+  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  return { date, time };
+}
+
 function Group() {
+  const { date, time } = useLiveClock();
   return (
     <div className="absolute contents left-[1771px] not-italic text-black top-[50px] whitespace-nowrap">
-      <p className="absolute font-['Google_Sans',sans-serif] leading-[normal] left-[1791px] opacity-50 text-[16px] top-[50px]">2026.5.20</p>
-      <p className="absolute font-['Google_Sans',sans-serif] leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">08:58</p>
+      <p className="absolute font-['Google_Sans',sans-serif] leading-[normal] left-[1791px] opacity-50 text-[16px] top-[50px]">{date}</p>
+      <p className="absolute font-['Google_Sans',sans-serif] leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">{time}</p>
     </div>
   );
 }

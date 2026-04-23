@@ -1,46 +1,67 @@
 import { useState, useRef, useEffect } from 'react';
 
-// Fresh Figma MCP asset URLs
-const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/1b239eff-54bd-4f7b-8be5-e0c666a370c8";
-const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/25652627-0b80-4c64-9d43-723609ac6794";
-const imgGroup1010109929 = "https://www.figma.com/api/mcp/asset/06e41070-dfc7-4893-8b2b-abe121aa18bf";
-const imgGroup1010109849 = "https://www.figma.com/api/mcp/asset/db2537c9-923b-4374-9806-035cb4853ace";
-const imgGroup1010109853 = "https://www.figma.com/api/mcp/asset/6db5761f-edac-4d3a-9af1-b3e9acca9389";
-const imgGroup1010109854 = "https://www.figma.com/api/mcp/asset/d18545c5-4258-4afd-918c-82a08a6083ee";
+// Fresh Figma asset URLs — node 1-1779 (Q3 Summary) + 1-2366 (Calendar)
+const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/df1ee347-b571-4056-88d5-48e05d6b6c1d";
+const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/24fc519f-dd12-4ac9-b597-d0999b655b0a";
+const imgGroup1010109929  = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
+const imgGroup1010109849  = "https://www.figma.com/api/mcp/asset/ed36f23a-2fe1-4e85-81fc-eeba612da2f0";
+const imgGroup1010109853  = "https://www.figma.com/api/mcp/asset/a6fbd869-7bf8-41c7-811b-b8cc9ee97b3f";
+const imgGroup1010109854  = "https://www.figma.com/api/mcp/asset/32f32414-f696-4d13-b2e9-975da05004fb";
 
-// Calendar screenshot from Figma node 1-2366
-const imgCalendar = "https://www.figma.com/api/mcp/asset/27600959-2351-40ab-ad4d-b79926354732";
+// Calendar screenshot — node 1-2366
+const imgCalendar = "https://www.figma.com/api/mcp/asset/d092aea3-2af3-4163-8546-4cc83f9fa40a";
 
-// Doc images
-const imgImage1197 = "https://www.figma.com/api/mcp/asset/95dec604-b24c-4477-bddd-95ef97f14e38";
-const imgImage1198 = "https://www.figma.com/api/mcp/asset/8a1e1e21-b7d5-4b34-8c28-123c72fc0684";
-const imgImage1199 = "https://www.figma.com/api/mcp/asset/23f313f6-934c-4816-a057-028596115f98";
-const imgImage1200 = "https://www.figma.com/api/mcp/asset/e66eaa9c-2393-4e5b-8f25-a7f26edf32b7";
-const imgImage1202 = "https://www.figma.com/api/mcp/asset/c17cbdd3-038e-451f-94d5-0d49fa1b17e1";
-const imgImage1203 = "https://www.figma.com/api/mcp/asset/6a1fe9ff-6e71-4e43-8f17-8387875e4379";
-const imgImage1123 = "https://www.figma.com/api/mcp/asset/fc707b03-979c-428c-823e-a6b1f71f810f";
-const imgImage1124 = "https://www.figma.com/api/mcp/asset/35b09a7e-e1e7-45fc-b3ae-6dea33213b59";
-const imgImage1201 = "https://www.figma.com/api/mcp/asset/045ca7b7-e414-41e6-9feb-1fff084b477e";
-const imgImage1204 = "https://www.figma.com/api/mcp/asset/028aa850-1562-408f-9837-1647fdfb00ef";
-const imgImage1205 = "https://www.figma.com/api/mcp/asset/434273fe-e6d5-4c31-a5ad-34d96dd6ceec";
-const imgImage1206 = "https://www.figma.com/api/mcp/asset/ba441af7-da56-4f44-be91-f40ace965dec";
-const imgImage1207 = "https://www.figma.com/api/mcp/asset/b64c340a-ae18-41ac-8478-01ae433c0240";
-const imgImage1208 = "https://www.figma.com/api/mcp/asset/85c6bfba-e077-4228-9820-21a732b6ef95";
+// Document thumbnails — from node 48-15228 (freshest)
+const imgImage1197 = "https://www.figma.com/api/mcp/asset/12fe8153-03f1-445f-a26d-bbabc4c81753";
+const imgImage1198 = "https://www.figma.com/api/mcp/asset/f583a906-b630-47d6-b9df-fd4e4d020353";
+const imgImage1199 = "https://www.figma.com/api/mcp/asset/16d54682-921d-4933-b5fe-6724101c8d16";
+const imgImage1200 = "https://www.figma.com/api/mcp/asset/db04faac-725f-4c07-8b7b-a3a270679a68";
+const imgImage1202 = "https://www.figma.com/api/mcp/asset/8414947e-e58d-4eb1-bc1d-e3867c0d504c";
+const imgImage1203 = "https://www.figma.com/api/mcp/asset/71998dd7-184a-4282-929a-4dd094338724";
+const imgImage1123 = "https://www.figma.com/api/mcp/asset/88c798fe-f0ad-46f7-99f0-eb8cd2962f4f";
+const imgImage1124 = "https://www.figma.com/api/mcp/asset/48a222fa-0b9d-436b-aaee-eb344ba1314d";
+const imgImage1201 = "https://www.figma.com/api/mcp/asset/896b7dce-dcf7-45e5-aa17-0c2722308b27";
+const imgImage1204 = "https://www.figma.com/api/mcp/asset/64ababf1-9b20-4614-902c-5c131e473727";
+const imgImage1205 = "https://www.figma.com/api/mcp/asset/0dfad47e-07c3-4b0c-99dc-c6ed3d089f6c";
+const imgImage1206 = "https://www.figma.com/api/mcp/asset/16a0fe7f-6639-4e64-ac25-294a6705220e";
+const imgImage1207 = "https://www.figma.com/api/mcp/asset/95591b84-3b4c-41fa-b98b-5a761214a72f";
+const imgImage1208 = "https://www.figma.com/api/mcp/asset/77a90440-6027-4df8-b9a5-c9e1b4ceafc2";
+
+// Live clock hook — uses browser locale (no API needed)
+function useLiveClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const date = now.toLocaleDateString('en-CA').replace(/-/g, '.'); // YYYY.MM.DD
+  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  return { date, time };
+}
 
 type SubScreen = 'q3' | 'calendar';
 
-export default function Frame2055246625({ visible }: { visible: boolean }) {
+export default function Frame2055246625({
+  visible,
+  onReset,
+}: {
+  visible: boolean;
+  onReset?: () => void;
+}) {
   const [subScreen, setSubScreen] = useState<SubScreen>('q3');
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [scheduleBubbleVisible, setScheduleBubbleVisible] = useState(false);
+  const [endSessionVisible, setEndSessionVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { date, time } = useLiveClock();
 
   useEffect(() => {
     if (visible) {
       setSubScreen('q3');
       setInputValue('');
       setScheduleBubbleVisible(false);
+      setEndSessionVisible(false);
     }
   }, [visible]);
 
@@ -50,8 +71,11 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
       if (val.includes('schedule') || val.includes('meeting')) {
         setScheduleBubbleVisible(true);
         setInputValue('');
+        // 1s delay then show calendar
         setTimeout(() => {
           setSubScreen('calendar');
+          // 2s after calendar appears, show end session
+          setTimeout(() => setEndSessionVisible(true), 2000);
         }, 1000);
       }
     }
@@ -59,108 +83,220 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
 
   return (
     <div
-      className="bg-[#f1f1f1] absolute inset-0 transition-opacity duration-700"
-      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
+      className="absolute inset-0 transition-opacity duration-700"
+      style={{
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? 'auto' : 'none',
+        background: '#f1f1f1',
+      }}
     >
-      <div className="relative size-full">
+      {/* Live clock */}
+      <p className="absolute font-['Google_Sans',sans-serif] leading-normal opacity-50 text-[16px] top-[50px] right-[129px]">{date}</p>
+      <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] text-[36px] top-[72px] right-[53px] tracking-[-1.08px] opacity-80">{time}</p>
 
-        {/* Clock */}
-        <p className="absolute font-['Google_Sans',sans-serif] leading-normal left-[1791px] opacity-50 text-[16px] top-[50px]">2026.5.20</p>
-        <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] left-[1771px] opacity-80 text-[36px] top-[72.48px] tracking-[-1.08px]">08:58</p>
+      {/* End session button — appears 2s after calendar */}
+      <button
+        className="absolute rounded-[53.25px] cursor-pointer transition-opacity duration-500"
+        style={{
+          background: '#960000',
+          top: '55px',
+          right: '294px',
+          padding: '9px 31.5px 7.5px',
+          opacity: endSessionVisible ? 1 : 0,
+          pointerEvents: endSessionVisible ? 'auto' : 'none',
+          border: 'none',
+          color: 'white',
+          fontFamily: "'Google_Sans', sans-serif",
+          fontWeight: 500,
+          fontSize: '14px',
+          letterSpacing: 0,
+          zIndex: 20,
+        }}
+        onClick={onReset}
+      >
+        end session
+      </button>
+
+      {/* Scrollable wrapper — matches Figma node structure */}
+      <div className="absolute left-[53.25px] top-[154px] w-[1818px] overflow-x-clip overflow-y-auto rounded-tl-[60px] rounded-tr-[60px]" style={{ height: '1046px' }}>
 
         {/* Main card */}
-        <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[rgba(0,0,0,0)] h-[823.61px] left-[calc(50%+1px)] overflow-clip rounded-[60px] shadow-[47px_70px_100px_0px_rgba(0,0,0,0.05)] top-[calc(50%-34.2px)] w-[1816.5px]">
-
-          {/* Left: thumbnail sidebar — hidden when calendar shown */}
+        <div
+          className="absolute rounded-[60px] overflow-clip"
+          style={{
+            width: '1816.5px',
+            height: '823.61px',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, calc(-50% - 111.2px))',
+            background: 'rgba(0,0,0,0)',
+            boxShadow: '47px 70px 100px 0px rgba(0,0,0,0.05)',
+          }}
+        >
+          {/* Sidebar logo — hidden on calendar */}
           <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute h-[723px] left-[calc(50%-818.75px)] overflow-clip rounded-bl-[50px] rounded-br-[20px] rounded-tl-[20px] rounded-tr-[20px] top-[calc(50%+36.09px)] w-[151px] transition-opacity duration-500"
-            style={{ opacity: subScreen === 'calendar' ? 0 : 1 }}
+            className="absolute transition-opacity duration-500"
+            style={{
+              width: '120.96px', height: '30.319px',
+              left: 'calc(50% - 818.77px)', top: 'calc(50% - 364.48px)',
+              transform: 'translate(-50%, -50%)',
+              opacity: subScreen === 'calendar' ? 0 : 1,
+            }}
           >
-            <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] top-[calc(50%-318.96px)] w-[151.238px]">
+            <img alt="" className="absolute inset-0 max-w-none size-full block" src={imgGroup1010109929} />
+          </div>
+
+          {/* Sidebar thumbnails — hidden on calendar */}
+          <div
+            className="absolute overflow-clip rounded-bl-[50px] rounded-br-[20px] rounded-tl-[20px] rounded-tr-[20px] transition-opacity duration-500"
+            style={{
+              width: '151px', height: '723px',
+              left: 'calc(50% - 818.75px)', top: 'calc(50% + 36.09px)',
+              transform: 'translate(-50%, -50%)',
+              opacity: subScreen === 'calendar' ? 0 : 1,
+            }}
+          >
+            <div className="absolute" style={{ width: '151.238px', height: '85.072px', left: '50%', top: 'calc(50% - 318.96px)', transform: 'translate(-50%, -50%)', borderRadius: '20px' }}>
               <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[20px] size-full" src={imgRectangle3473784} />
             </div>
-            {([-225.89, -132.82, -39.75, 53.32, 146.39, 239.46, 332.53] as number[]).map((offset, i) => (
-              <div key={i} className="-translate-x-1/2 -translate-y-1/2 absolute h-[85.072px] left-1/2 rounded-[20px] w-[151.238px]" style={{ top: `calc(50% + ${offset}px)` }}>
+            {[
+              { top: 'calc(50% - 225.89px)', clip: { w: '303.93%', h: '300.42%', l: '0', t: '0' } },
+              { top: 'calc(50% - 132.82px)', clip: { w: '303.93%', h: '310.94%', l: '0', t: '-105.85%' } },
+              { top: 'calc(50% - 39.75px)',  clip: { w: '303.93%', h: '308.53%', l: '0', t: '-207.35%' } },
+              { top: 'calc(50% + 53.32px)',  clip: { w: '305.5%',  h: '305.95%', l: '-102.29%', t: '-1.5%' } },
+              { top: 'calc(50% + 146.39px)', clip: { w: '302.45%', h: '301.42%', l: '-201.83%', t: '0' } },
+              { top: 'calc(50% + 239.46px)', clip: { w: '304.61%', h: '311.29%', l: '-102.99%', t: '-208.35%' } },
+              { top: 'calc(50% + 332.53px)', clip: { w: '302.53%', h: '311.29%', l: '-201.6%', t: '-208.35%' } },
+            ].map(({ top, clip }, i) => (
+              <div key={i} className="absolute" style={{ width: '151.238px', height: '85.072px', left: '50%', top, transform: 'translate(-50%, -50%)', borderRadius: '20px' }}>
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
-                  <img alt="" className="absolute h-full left-0 max-w-none top-0 w-[200.92%]" src={imgRectangle3473785} />
+                  <img alt="" className="absolute max-w-none" style={{ width: clip.w, height: clip.h, left: clip.l, top: clip.t }} src={imgRectangle3473785} />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Logo above sidebar — hidden when calendar shown */}
+          {/* White doc area — hidden on calendar */}
           <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute h-[30.319px] left-[calc(50%-818.77px)] top-[calc(50%-364.48px)] w-[120.96px] transition-opacity duration-500"
-            style={{ opacity: subScreen === 'calendar' ? 0 : 1 }}
-          >
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1010109929} />
-          </div>
-
-          {/* Center: white doc area — hidden when calendar shown */}
-          <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute bg-white h-[795.397px] left-[calc(50%-145.58px)] rounded-[20px] top-[calc(50%-0.11px)] w-[1175.145px] transition-opacity duration-500"
-            style={{ opacity: subScreen === 'calendar' ? 0 : 0.8 }}
+            className="absolute rounded-[20px] transition-opacity duration-500"
+            style={{
+              width: '1175.145px', height: '795.397px',
+              left: 'calc(50% - 145.58px)', top: 'calc(50% - 0.11px)',
+              transform: 'translate(-50%, -50%)',
+              background: 'white',
+              opacity: subScreen === 'calendar' ? 0 : 0.8,
+            }}
           />
 
-          {/* Center: Q3 Summary title */}
+          {/* Q3 Summary title — hidden on calendar */}
           <div
-            className="-translate-y-1/2 absolute flex flex-col font-['Google_Sans',sans-serif] font-bold justify-center leading-[0] left-[calc(50%-607.21px)] not-italic opacity-80 text-[52.054px] text-black top-[calc(50%-0.11px)] whitespace-nowrap transition-opacity duration-500"
-            style={{ opacity: subScreen === 'calendar' ? 0 : 1 }}
+            className="absolute transition-opacity duration-500"
+            style={{
+              left: 'calc(50% - 607.21px)',
+              top: 'calc(50% - 0.11px)',
+              transform: 'translateY(-50%)',
+              opacity: subScreen === 'calendar' ? 0 : 1,
+              fontFamily: "'Google_Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: '52.054px',
+              color: 'black',
+              opacity80: 0.8,
+              whiteSpace: 'nowrap',
+            }}
           >
-            <p className="leading-[1.5]">Q3 Summary</p>
+            <p style={{ opacity: 0.8, margin: 0, lineHeight: 1.5 }}>Q3 Summary</p>
           </div>
 
-          {/* Calendar — crossfades in after schedule trigger */}
+          {/* Calendar — crossfades in */}
           <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute top-[calc(50%-0.11px)] left-[calc(50%-291px)] w-[1350px] h-[823.61px] rounded-tl-[50px] rounded-bl-[50px] rounded-tr-[20px] rounded-br-[20px] overflow-hidden transition-opacity duration-700"
-            style={{ opacity: subScreen === 'calendar' ? 1 : 0 }}
+            className="absolute overflow-hidden transition-opacity duration-700"
+            style={{
+              width: '1335.191px', height: '795.396px',
+              right: '466.56px', top: '14.14px',
+              borderRadius: '50px 20px 20px 50px',
+              opacity: subScreen === 'calendar' ? 1 : 0,
+            }}
           >
             <img alt="Outlook Calendar" className="w-full h-full object-cover object-left-top" src={imgCalendar} />
+            <p className="absolute font-bold text-white text-[14.037px] leading-normal" style={{ left: '589.19px', top: '294.63px', width: '83.814px' }}>Q3 Meeting</p>
+            <p className="absolute text-white text-[7.42px] leading-normal opacity-80" style={{ left: '589.19px', top: '315.4px', width: '40.392px' }}>9:30-10:30</p>
           </div>
 
-          {/* Right: chat sidebar bg */}
-          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#797979] h-[795.396px] left-[calc(50%+677.09px)] opacity-10 rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px] top-[calc(50%-0.11px)] w-[433.75px]" />
+          {/* Right sidebar bg */}
+          <div className="absolute rounded-bl-[20px] rounded-br-[50px] rounded-tl-[20px] rounded-tr-[50px]"
+            style={{ width: '433.75px', height: '795.396px', left: 'calc(50% + 677.09px)', top: 'calc(50% - 0.11px)', transform: 'translate(-50%, -50%)', background: '#797979', opacity: 0.1 }}
+          />
 
           {/* Right: user prompt bubble */}
-          <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[calc(50%+707.72px)] pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[calc(50%-326.8px)]">
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[281px]">
-              <p className="leading-[1.5]">"I need to create Q3 performance summary"</p>
-            </div>
-          </div>
-
-          {/* Right: AI response */}
-          <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex h-[88px] items-center justify-center left-[calc(50%+655.03px)] pb-[15px] pt-[16px] px-[20px] rounded-[20px] top-[calc(50%-224.8px)]">
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[310.404px]">
-              <p className="leading-[1.5]">A document containing all the projects worked on this quarter was made. Please confirm if you are fine with it or delete documents you wish to remove</p>
-            </div>
-          </div>
-
-          {/* Right: "Schedule a meeting" bubble — appears after trigger */}
-          <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#f8f8f8] content-stretch flex items-center justify-end left-[calc(50%+707.72px)] pb-[5.5px] pt-[6.5px] px-[20px] rounded-[10px] top-[calc(50%-122.8px)] transition-opacity duration-300"
-            style={{ opacity: scheduleBubbleVisible ? 1 : 0 }}
+          <div className="absolute flex items-center justify-end rounded-[10px]"
+            style={{ background: '#f8f8f8', left: 'calc(50% + 708px)', top: 'calc(50% - 326.8px)', transform: 'translate(-50%, -50%)', padding: '6.5px 20px 5.5px' }}
           >
-            <div className="flex flex-col font-['Google_Sans',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-black w-[281px]">
-              <p className="leading-[1.5]">Schedule a meeting for Q3 summary</p>
-            </div>
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>"I need to create Q3 performance summary"</p>
+          </div>
+
+          {/* Right: AI response 1 */}
+          <div className="absolute flex items-center justify-center rounded-[20px]"
+            style={{ left: 'calc(50% + 655.03px)', top: 'calc(50% - 224.8px)', transform: 'translate(-50%, -50%)', height: '88px', padding: '16px 20px 15px' }}
+          >
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.404px', lineHeight: 1.5, margin: 0 }}>
+              A document containing all the projects worked on this quarter was made. Please confirm if you are fine with it or delete documents you wish to remove
+            </p>
+          </div>
+
+          {/* Right: schedule bubble — appears after trigger */}
+          <div
+            className="absolute flex items-center justify-end rounded-[10px] transition-opacity duration-300"
+            style={{
+              background: '#f8f8f8',
+              left: 'calc(50% + 708px)', top: 'calc(50% - 122.8px)',
+              transform: 'translate(-50%, -50%)',
+              padding: '6.5px 20px 5.5px',
+              opacity: scheduleBubbleVisible ? 1 : 0,
+            }}
+          >
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '281px', lineHeight: 1.5, margin: 0 }}>Schedule a meeting for Q3 summary</p>
+          </div>
+
+          {/* Right: AI response 2 — "meeting scheduled" — appears with calendar */}
+          <div
+            className="absolute flex flex-col justify-center rounded-[20px] transition-opacity duration-700 gap-[5px]"
+            style={{
+              left: 'calc(50% + 655.03px)', top: 'calc(50% + 76.2px)',
+              transform: 'translate(-50%, -50%)',
+              padding: '16px 20px 15px',
+              opacity: subScreen === 'calendar' ? 1 : 0,
+            }}
+          >
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', width: '310.404px', lineHeight: 1.5, margin: 0 }}>
+              Meeting was scheduled for Q3 summary with 85 invitees
+            </p>
+            <p style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '11px', color: 'black', width: '310.404px', lineHeight: 1.5, margin: 0, opacity: 0.5, textDecoration: 'underline' }}>
+              see invitees
+            </p>
           </div>
 
           {/* Right: input bar */}
           <div
-            className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#d1d1d1] content-stretch flex gap-[13px] items-center left-[calc(50%+677.09px)] px-[27px] py-[11px] rounded-[36px] top-[calc(50%+356.59px)] w-[396px] cursor-text"
-            style={{ zIndex: 10 }}
+            className="absolute flex gap-[13px] items-center rounded-[36px] cursor-text"
+            style={{
+              background: '#d1d1d1',
+              left: 'calc(50% + 677.09px)', top: 'calc(50% + 356.59px)',
+              transform: 'translate(-50%, -50%)',
+              width: '396px', padding: '11px 27px',
+              zIndex: 10,
+            }}
             onClick={() => inputRef.current?.focus()}
           >
-            <div className="h-[15.149px] relative shrink-0 w-[7.816px]">
-              <div className="absolute inset-[0_-5.4%_-2.78%_-5.4%]">
+            <div className="shrink-0" style={{ height: '15.149px', width: '7.816px', position: 'relative' }}>
+              <div className="absolute" style={{ inset: '0 -5.4% -2.78% -5.4%' }}>
                 <img alt="" className="block max-w-none size-full" src={imgGroup1010109849} />
               </div>
             </div>
             <div className="relative flex-1">
               {inputValue === '' && (
                 <span
-                  className="absolute top-0 left-0 font-['Google_Sans',sans-serif] text-[16px] text-black leading-[1.5] pointer-events-none transition-opacity duration-200"
-                  style={{ opacity: isFocused ? 0.3 : 1 }}
+                  className="absolute top-0 left-0 pointer-events-none transition-opacity duration-200"
+                  style={{ fontFamily: "'Google_Sans', sans-serif", fontSize: '16px', color: 'black', lineHeight: 1.5, opacity: isFocused ? 0.3 : 1 }}
                 >
                   |Ask Anything
                 </span>
@@ -173,66 +309,71 @@ export default function Frame2055246625({ visible }: { visible: boolean }) {
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 onKeyDown={handleKeyDown}
-                className="bg-transparent outline-none border-none font-['Google_Sans',sans-serif] text-[16px] text-black w-full relative z-10 caret-black"
-                style={{ caretColor: 'black', pointerEvents: 'auto' }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  fontFamily: "'Google_Sans', sans-serif",
+                  fontSize: '16px',
+                  color: 'black',
+                  caretColor: 'black',
+                  width: '100%',
+                  position: 'relative',
+                  zIndex: 10,
+                  pointerEvents: 'auto',
+                }}
               />
             </div>
           </div>
         </div>
 
-        {/* Documents included section */}
-        <div className="absolute bg-[#f7f7f7] h-[641px] left-[54.25px] opacity-30 rounded-[60px] top-[1121px] w-[1817px]" />
-        <p className="absolute font-['Google_Sans',sans-serif] font-medium leading-[0.91] left-[788.75px] not-italic opacity-50 text-[24px] text-black top-[1162.01px] tracking-[-0.72px] whitespace-nowrap">
+        {/* Documents included section — 70px below card bottom (top: 1047.61px from Figma) */}
+        <div className="absolute rounded-[60px]" style={{ background: '#f7f7f7', height: '641px', left: '54.25px', opacity: 0.3, top: '1047.61px', width: '1817px' }} />
+        <p className="absolute opacity-50 whitespace-nowrap"
+          style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, fontSize: '24px', color: 'black', left: '788.75px', top: '1088.62px', letterSpacing: '-0.72px', lineHeight: 0.91 }}>
           Documents included in the file
         </p>
 
-        {/* Doc row 1 */}
-        <div className="-translate-x-1/2 absolute left-[calc(50%-0.75px)] top-[993.13px]" style={{ position: 'absolute', width: '1818px', left: 'calc(50% - 0.75px)', transform: 'translateX(-50%)' }}>
-          {[
-            { l: 'calc(50%-760.05px)', img: imgImage1123, clip: true, iw: '200.61%', ih: '125.34%' },
-            { l: 'calc(50%-506.95px)', img: imgImage1197, clip: false },
-            { l: 'calc(50%-253.85px)', img: imgImage1198, clip: true, iw: '209.6%', ih: '137.19%', il: '-93.81%', it: '-18.6%' },
-            { l: 'calc(50%-0.75px)',   img: imgImage1199, clip: false },
-            { l: 'calc(50%+252.35px)', img: imgImage1200, clip: true, iw: '113.18%', ih: '144.2%', il: '-6.59%', it: '-4.78%' },
-            { l: 'calc(50%+505.45px)', img: imgImage1202, clip: true, iw: '161.44%', ih: '172.26%', il: '-30.72%', it: '-28.24%', r: '10px' },
-            { l: 'calc(50%+758.55px)', img: imgImage1203, clip: false, r: '10px' },
-          ].map(({ l, img, clip, iw, ih, il, it, r }, i) => (
-            <div key={i} className="absolute h-[241.169px] opacity-80 w-[217.102px]" style={{ left: l, top: '993.13px', transform: 'translateX(-50%)', borderRadius: r || '20px' }}>
-              {clip ? (
-                <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: r || '20px' }}>
-                  <img alt="" className="absolute max-w-none" style={{ width: iw, height: ih, left: il || '0', top: it || '0' }} src={img} />
-                </div>
-              ) : (
+        {/* Doc row 1 — top: 1143.74px */}
+        {[
+          { l: 'calc(50% - 758.3px)', t: '1143.74px', img: imgRectangle3473785, clip: { w: '200.61%', h: '125.34%', l: '0', t: '0' }, del: imgGroup1010109853, delL: '275.04px' },
+          { l: 'calc(50% - 505.2px)', t: '1143.74px', img: imgImage1197, cover: true, del: imgGroup1010109853, delL: '528.04px' },
+          { l: 'calc(50% - 252.1px)', t: '1143.74px', img: imgImage1198, clip: { w: '209.6%', h: '137.19%', l: '-93.81%', t: '-18.6%' }, del: imgGroup1010109853, delL: '781.04px' },
+          { l: 'calc(50% + 1px)',     t: '1143.74px', img: imgImage1199, cover: true, del: imgGroup1010109853, delL: '1034.04px' },
+          { l: 'calc(50% + 254.1px)', t: '1143.74px', img: imgImage1200, clip: { w: '113.18%', h: '144.2%', l: '-6.59%', t: '-4.78%' }, del: imgGroup1010109853, delL: '1287.04px' },
+          { l: 'calc(50% + 507.2px)', t: '1143.74px', img: imgImage1202, clip: { w: '161.44%', h: '172.26%', l: '-30.72%', t: '-28.24%' }, r: '10px', del: imgGroup1010109853, delL: '1541.04px' },
+          { l: 'calc(50% + 760.3px)', t: '1143.74px', img: imgImage1203, cover: true, r: '10px', del: imgGroup1010109853, delL: '1794.04px' },
+        ].map(({ l, t, img, clip, cover, r, del, delL }, i) => (
+          <div key={i}>
+            <div className="absolute opacity-80" style={{ height: '241.169px', left: l, top: t, transform: 'translateX(-50%)', width: '217.102px', borderRadius: r || '20px' }}>
+              {cover ? (
                 <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" style={{ borderRadius: r || '20px' }} src={img} />
+              ) : (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: r || '20px' }}>
+                  <img alt="" className="absolute max-w-none" style={{ width: clip!.w, height: clip!.h, left: clip!.l, top: clip!.t }} src={img} />
+                </div>
               )}
             </div>
-          ))}
-        </div>
+            <img alt="" className="absolute opacity-80" style={{ width: '30.319px', height: '30.319px', left: delL, top: '1150.18px' }} src={del} />
+          </div>
+        ))}
 
-        {/* Doc row 2 */}
-        <div style={{ position: 'absolute', width: '1818px', left: 'calc(50% - 0.75px)', transform: 'translateX(-50%)' }}>
-          {[
-            { l: 'calc(50%-760.05px)', img: imgImage1124, clip: false },
-            { l: 'calc(50%-506.95px)', img: imgImage1201, clip: false },
-            { l: 'calc(50%-253.85px)', img: imgImage1204, clip: false },
-            { l: 'calc(50%-0.75px)',   img: imgImage1205, clip: false },
-            { l: 'calc(50%+252.35px)', img: imgImage1206, clip: false },
-            { l: 'calc(50%+505.45px)', img: imgImage1207, clip: false },
-            { l: 'calc(50%+758.55px)', img: imgImage1208, clip: false },
-          ].map(({ l, img }, i) => (
-            <div key={i} className="absolute h-[241.169px] opacity-80 rounded-[20px] w-[217.102px]" style={{ left: l, top: '1267.42px', transform: 'translateX(-50%)' }}>
+        {/* Doc row 2 — top: 1418.03px */}
+        {[
+          { l: 'calc(50% - 758.3px)', img: imgImage1123, del: imgGroup1010109853, delL: '275.04px' },
+          { l: 'calc(50% - 505.2px)', img: imgImage1201, del: imgGroup1010109853, delL: '528.04px' },
+          { l: 'calc(50% - 252.1px)', img: imgImage1204, del: imgGroup1010109853, delL: '781.04px' },
+          { l: 'calc(50% + 1px)',     img: imgImage1205, del: imgGroup1010109853, delL: '1034.04px' },
+          { l: 'calc(50% + 254.1px)', img: imgImage1206, del: imgGroup1010109853, delL: '1287.04px' },
+          { l: 'calc(50% + 507.2px)', img: imgImage1207, del: imgGroup1010109853, delL: '1541.04px' },
+          { l: 'calc(50% + 760.3px)', img: imgImage1208, del: imgGroup1010109853, delL: '1794.04px' },
+        ].map(({ l, img, del, delL }, i) => (
+          <div key={i}>
+            <div className="absolute opacity-80 rounded-[20px]" style={{ height: '241.169px', left: l, top: '1418.03px', transform: 'translateX(-50%)', width: '217.102px' }}>
               <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[20px] size-full" src={img} />
             </div>
-          ))}
-        </div>
-
-        {/* Delete icons row 1 */}
-        {[221.79, 474.79, 727.79, 980.79, 1233.79, 1487.79, 1740.79].map((left, i) => (
-          <img key={i} alt="" className="absolute opacity-80 size-[30.319px]" style={{ left: `${left}px`, top: '999.57px' }} src={i % 2 === 0 ? imgGroup1010109853 : imgGroup1010109854} />
-        ))}
-        {/* Delete icons row 2 */}
-        {[221.79, 474.79, 727.79, 980.79, 1233.79, 1487.79, 1740.79].map((left, i) => (
-          <img key={i} alt="" className="absolute opacity-80 size-[30.319px]" style={{ left: `${left}px`, top: '1273.86px' }} src={i % 2 === 0 ? imgGroup1010109853 : imgGroup1010109854} />
+            <img alt="" className="absolute opacity-80" style={{ width: '30.319px', height: '30.319px', left: delL, top: '1424.47px' }} src={del} />
+          </div>
         ))}
       </div>
     </div>
