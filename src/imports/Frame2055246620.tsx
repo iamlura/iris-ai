@@ -247,7 +247,7 @@ function Frame({ onNavigate, onNavigateBi }: { onNavigate?: () => void; onNaviga
             } else {
               onNavigate?.();
             }
-          }, 800);
+          }, isBi ? 1800 : 800);
         }, 450);
       }, 300);
     }
