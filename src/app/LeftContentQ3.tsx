@@ -109,6 +109,16 @@ export function CalendarLeft() {
           src={imgCalendar}
         />
       </div>
+      {/* Sidebar logo (window chrome dots) — overlay on top of calendar */}
+      <div style={{
+        position: 'absolute',
+        width: '120.96px',
+        height: '30.319px',
+        left: '50px',
+        top: '50px',
+      }}>
+        <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
+      </div>
     </div>
   );
 }

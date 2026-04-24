@@ -28,11 +28,18 @@ type BIScreen = 'bi-docs' | 'bi-dashboard' | 'bi-email';
 type Screen = Q3Screen | BIScreen;
 
 type WindowMode = 'normal' | 'minimized';
+type MinimizedSession = {
+  flow: Flow;
+  screen: Screen;
+  chatMessages: ChatMessage[];
+  endSessionVisible: boolean;
+};
 
 export default function App() {
   const [scale, setScale] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [windowMode, setWindowMode] = useState<WindowMode>('normal');
+  const [minimizedSession, setMinimizedSession] = useState<MinimizedSession | null>(null);
 
   const [phase, setPhase] = useState<Phase>('landing');
   const [flow, setFlow] = useState<Flow>('q3');
@@ -94,12 +101,35 @@ export default function App() {
   }, [addTimer, clearTimers]);
 
   const handleMinimize = useCallback(() => {
+    // Snapshot the current session so we can restore it later.
+    clearTimers();
+    setMinimizedSession({ flow, screen, chatMessages, endSessionVisible });
+    // Collapse bubble back to landing pill so the Ask Anything input is typeable
+    // while minimized. Preview square at bottom-left shows the snapshot.
+    setEndSessionVisible(false);
+    setPhase('landing');
     setWindowMode('minimized');
-  }, []);
+    // Clear chat visually after the shrink so the new landing is clean.
+    addTimer(() => setChatMessages([]), EXPAND_DURATION);
+  }, [addTimer, clearTimers, flow, screen, chatMessages, endSessionVisible]);
 
   const handleRestore = useCallback(() => {
+    if (!minimizedSession) {
+      setWindowMode('normal');
+      return;
+    }
+    clearTimers();
+    // Restore snapshot and expand bubble back to content state.
+    setFlow(minimizedSession.flow);
+    setScreen(minimizedSession.screen);
+    setChatMessages(minimizedSession.chatMessages);
+    setEndSessionVisible(minimizedSession.endSessionVisible);
+    setMinimizedSession(null);
     setWindowMode('normal');
-  }, []);
+    // Go through the expanding phase for a smooth re-open animation.
+    setPhase('expanding');
+    addTimer(() => setPhase('content'), EXPAND_DURATION);
+  }, [addTimer, clearTimers, minimizedSession]);
 
   /* ===== Flow data helpers ===== */
 
@@ -178,6 +208,11 @@ export default function App() {
     let nextFlow: Flow = flow;
     if (/\bq3\b/.test(lower)) nextFlow = 'q3';
     else if (/\bbi\b/.test(lower) || /power\s*bi/.test(lower)) nextFlow = 'bi';
+    // If a session is minimized, force the OPPOSITE flow — no repeating flows
+    // while one is already minimized (per current design constraint).
+    if (minimizedSession) {
+      nextFlow = minimizedSession.flow === 'q3' ? 'bi' : 'q3';
+    }
     setFlow(nextFlow);
 
     // Step 1: 800ms delay before anything happens
@@ -207,7 +242,7 @@ export default function App() {
         scheduleAIReply(nextFlow === 'q3' ? 'q3-summary' : 'bi-docs', CONTENT_FADE + 400);
       }, EXPAND_DURATION);
     }, EXPAND_DELAY);
-  }, [addTimer, clearTimers, flow, pushMessages, scheduleAIReply]);
+  }, [addTimer, clearTimers, flow, pushMessages, scheduleAIReply, minimizedSession]);
 
   /* ===== BI flow: advance docs → dashboard (via "Create BI" click or prompt) ===== */
   const advanceToDashboard = useCallback(() => {
@@ -378,13 +413,10 @@ export default function App() {
           />
         </div>
 
-        {/* Main SessionShell — hidden when minimized */}
-        <div style={{
-          width: '100%', height: '100%',
-          opacity: windowMode === 'minimized' ? 0 : 1,
-          pointerEvents: windowMode === 'minimized' ? 'none' : 'auto',
-          transition: 'opacity 300ms ease',
-        }}>
+        {/* Main SessionShell — always rendered. When minimized, phase is
+            'landing' so it shrinks to the small pill and the Ask Anything
+            input is active. */}
+        <div style={{ width: '100%', height: '100%' }}>
           <SessionShell
             phase={phase}
             flow={flow}
@@ -414,7 +446,7 @@ export default function App() {
               zIndex: 101,
             }}
           >
-            {/* Scaled-down Q3 summary (cover-fit into square) */}
+            {/* Scaled-down preview of the minimized flow + screen */}
             <div style={{
               position: 'absolute',
               width: '1383.25px', height: '990px',
@@ -423,7 +455,17 @@ export default function App() {
               top: '50%', left: '50%',
               pointerEvents: 'none',
             }}>
-              <Q3SummaryLeft />
+              {(() => {
+                const snap = minimizedSession;
+                if (!snap) return <Q3SummaryLeft />;
+                if (snap.flow === 'q3') {
+                  return snap.screen === 'calendar' ? <CalendarLeft /> : <Q3SummaryLeft />;
+                }
+                // BI
+                if (snap.screen === 'bi-dashboard') return <BIDashboardLeft />;
+                if (snap.screen === 'bi-email') return <EmailLeft />;
+                return <BIDocsLeft />;
+              })()}
             </div>
           </button>
         )}
