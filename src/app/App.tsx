@@ -27,9 +27,12 @@ type Q3Screen = 'q3-summary' | 'calendar';
 type BIScreen = 'bi-docs' | 'bi-dashboard' | 'bi-email';
 type Screen = Q3Screen | BIScreen;
 
+type WindowMode = 'normal' | 'minimized';
+
 export default function App() {
   const [scale, setScale] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [windowMode, setWindowMode] = useState<WindowMode>('normal');
 
   const [phase, setPhase] = useState<Phase>('landing');
   const [flow, setFlow] = useState<Flow>('q3');
@@ -75,6 +78,25 @@ export default function App() {
       document.exitFullscreen().catch(() => {});
     }
   };
+
+  /* ===== Window chrome handlers ===== */
+  const handleClose = useCallback(() => {
+    clearTimers();
+    setEndSessionVisible(false);
+    setChatMessages([]);
+    setScreen('q3-summary');
+    setFlow('q3');
+    setPhase('landing');
+    setWindowMode('normal');
+  }, [clearTimers]);
+
+  const handleMinimize = useCallback(() => {
+    setWindowMode('minimized');
+  }, []);
+
+  const handleRestore = useCallback(() => {
+    setWindowMode('normal');
+  }, []);
 
   /* ===== Flow data helpers ===== */
 
@@ -311,34 +333,115 @@ export default function App() {
           transform: `scale(${scale})`,
         }}
       >
-        {/* Fullscreen toggle — bottom-left corner, subtle */}
-        <button
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+        {/* Window chrome — traffic-light cluster.
+            Anchored to the big bubble's top-left so it sits consistently on the
+            glass bubble in both Q3 and BI flows. Hidden during landing. */}
+        <div
           style={{
-            position: 'absolute', bottom: '20px', left: '20px',
-            zIndex: 100, background: 'rgba(0,0,0,0.25)', border: 'none',
-            color: 'white', borderRadius: '8px', padding: '6px 10px',
-            cursor: 'pointer', fontSize: '18px', lineHeight: 1,
-            opacity: 0.5, transition: 'opacity 0.2s',
+            position: 'absolute',
+            // big bubble top-left corner is at ( 960 - 1817/2 , (600+49) - 990/2 )
+            // = (51.5, 154). Inset 24px for breathing room.
+            left: 'calc(50% - 884.5px)',
+            top: 'calc(50% - 422px)',
+            zIndex: 100, display: 'flex', gap: '8px', alignItems: 'center',
+            opacity: phase === 'landing' ? 0 : 1,
+            pointerEvents: phase === 'landing' ? 'none' : 'auto',
+            transition: 'opacity 400ms ease',
           }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-          onMouseLeave={e => (e.currentTarget.style.opacity = '0.5')}
         >
-          {isFullscreen ? '✕' : '⤢'}
-        </button>
+          {/* Close → reset to landing */}
+          <button
+            onClick={handleClose}
+            title="Close"
+            style={{
+              width: '14px', height: '14px', borderRadius: '50%',
+              background: '#FF5F57', border: '0.5px solid rgba(0,0,0,0.15)',
+              cursor: 'pointer', padding: 0, lineHeight: 1,
+              fontSize: '9px', color: 'rgba(0,0,0,0.5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            ×
+          </button>
+          {/* Minimize → tiny Q3 preview in lower-left */}
+          <button
+            onClick={handleMinimize}
+            title="Minimize"
+            style={{
+              width: '14px', height: '14px', borderRadius: '50%',
+              background: '#FEBC2E', border: '0.5px solid rgba(0,0,0,0.15)',
+              cursor: 'pointer', padding: 0, lineHeight: 1,
+              fontSize: '14px', color: 'rgba(0,0,0,0.5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            −
+          </button>
+          {/* Fullscreen → browser fullscreen (glass bubble fills screen) */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            style={{
+              width: '14px', height: '14px', borderRadius: '50%',
+              background: '#28C840', border: '0.5px solid rgba(0,0,0,0.15)',
+              cursor: 'pointer', padding: 0, lineHeight: 1,
+              fontSize: '9px', color: 'rgba(0,0,0,0.5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            {isFullscreen ? '⤡' : '⤢'}
+          </button>
+        </div>
 
-        <SessionShell
-          phase={phase}
-          flow={flow}
-          leftContentKey={screen}
-          leftContents={leftContents}
-          chatMessages={chatMessages}
-          endSessionVisible={endSessionVisible}
-          onSubmit={onSubmit}
-          onEndSession={handleEndSession}
-          leftOverlay={leftOverlay}
-        />
+        {/* Main SessionShell — hidden when minimized */}
+        <div style={{
+          width: '100%', height: '100%',
+          opacity: windowMode === 'minimized' ? 0 : 1,
+          pointerEvents: windowMode === 'minimized' ? 'none' : 'auto',
+          transition: 'opacity 300ms ease',
+        }}>
+          <SessionShell
+            phase={phase}
+            flow={flow}
+            leftContentKey={screen}
+            leftContents={leftContents}
+            chatMessages={chatMessages}
+            endSessionVisible={endSessionVisible}
+            onSubmit={onSubmit}
+            onEndSession={handleEndSession}
+            leftOverlay={leftOverlay}
+          />
+        </div>
+
+        {/* Minimized preview — small square with Q3 summary, lower-left, 20/20 gap */}
+        {windowMode === 'minimized' && (
+          <button
+            onClick={handleRestore}
+            title="Restore"
+            style={{
+              position: 'absolute', bottom: '20px', left: '20px',
+              width: '180px', height: '180px',
+              borderRadius: '18px',
+              padding: 0, border: 'none',
+              overflow: 'hidden', cursor: 'pointer',
+              background: '#F4F4F9',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)',
+              zIndex: 101,
+            }}
+          >
+            {/* Scaled-down Q3 summary (cover-fit into square) */}
+            <div style={{
+              position: 'absolute',
+              width: '1383.25px', height: '990px',
+              transform: `translate(-50%, -50%) scale(${180 / 990})`,
+              transformOrigin: 'center center',
+              top: '50%', left: '50%',
+              pointerEvents: 'none',
+            }}>
+              <Q3SummaryLeft />
+            </div>
+          </button>
+        )}
       </div>
     </div>
   );
