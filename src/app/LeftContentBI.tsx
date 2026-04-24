@@ -11,6 +11,22 @@
 const imgBiDashboard  = "https://www.figma.com/api/mcp/asset/79da4616-4eba-4a5d-a9d1-8e8dfd4ff21b";
 const imgOutlookEmail = "https://www.figma.com/api/mcp/asset/371210d9-d4f7-4349-853b-45041a5f2c7b";
 const imgShareIcon    = "https://www.figma.com/api/mcp/asset/4e00ede5-5184-4677-af12-441b02fe42f8";
+const imgChromeDots   = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
+
+// Shared top-left window chrome decoration (three dots), matches Q3 flow
+function ChromeDots() {
+  return (
+    <div style={{
+      position: 'absolute',
+      width: '120.96px',
+      height: '30.319px',
+      left: '50px',
+      top: '50px',
+    }}>
+      <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgChromeDots} />
+    </div>
+  );
+}
 
 const imgRect12 = "https://www.figma.com/api/mcp/asset/ff02b34c-df96-45c4-bde5-db24e38e0c2f";
 const imgRect15 = "https://www.figma.com/api/mcp/asset/4686ad7d-a11a-4d6e-aff6-9af5568c4e64";
@@ -30,6 +46,7 @@ const imgRect23 = "https://www.figma.com/api/mcp/asset/4b47c7e8-5d32-43fc-9824-1
 export function BIDocsLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <ChromeDots />
       {/* Title */}
       <p style={{
         position: 'absolute',
@@ -134,6 +151,7 @@ export function BIDashboardLeft() {
           src={imgBiDashboard}
         />
       </div>
+      <ChromeDots />
     </div>
   );
 }
@@ -151,6 +169,7 @@ export function EmailLeft() {
           src={imgOutlookEmail}
         />
       </div>
+      <ChromeDots />
     </div>
   );
 }

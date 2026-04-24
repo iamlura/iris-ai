@@ -161,9 +161,21 @@ export default function App() {
     addTimer(() => setEndSessionVisible(true), delayMs);
   }, [addTimer]);
 
-  /* ===== Expand from landing into flow ===== */
+  /* ===== Expand from landing into flow =====
+   *
+   * Prompt-keyword routing (case-insensitive):
+   *   - contains "q3"        → Q3 flow
+   *   - contains "bi" / "power bi" → BI flow
+   *   - otherwise            → keep current `flow` state (fallback)
+   */
   const handleLandingSubmit = useCallback((text: string) => {
     clearTimers();
+
+    const lower = text.toLowerCase();
+    let nextFlow: Flow = flow;
+    if (/\bq3\b/.test(lower)) nextFlow = 'q3';
+    else if (/\bbi\b/.test(lower) || /power\s*bi/.test(lower)) nextFlow = 'bi';
+    setFlow(nextFlow);
 
     // Step 1: 800ms delay before anything happens
     addTimer(() => {
@@ -175,27 +187,23 @@ export default function App() {
         setPhase('content');
 
         // User's opening prompt, canonicalized per flow
-        const openingText = flow === 'q3'
+        const openingText = nextFlow === 'q3'
           ? '"I need to create Q3 performance summary"'
           : 'Create Power BI of this year\'s earnings';
 
         pushMessages({
-          id: flow === 'q3' ? 'user-q3-open' : 'user-bi-open',
+          id: nextFlow === 'q3' ? 'user-q3-open' : 'user-bi-open',
           role: 'user',
           text: openingText,
         });
 
         // Show initial screen
-        setScreen(flow === 'q3' ? 'q3-summary' : 'bi-docs');
+        setScreen(nextFlow === 'q3' ? 'q3-summary' : 'bi-docs');
 
         // AI reply ~800ms after user bubble lands (to match content fade-in)
-        scheduleAIReply(flow === 'q3' ? 'q3-summary' : 'bi-docs', CONTENT_FADE + 400);
+        scheduleAIReply(nextFlow === 'q3' ? 'q3-summary' : 'bi-docs', CONTENT_FADE + 400);
       }, EXPAND_DURATION);
     }, EXPAND_DELAY);
-
-    // The opening input text is ignored visually (we always show canonical
-    // bubble text per flow) — matches user's "whatever they type advances"
-    void text;
   }, [addTimer, clearTimers, flow, pushMessages, scheduleAIReply]);
 
   /* ===== BI flow: advance docs → dashboard (via "Create BI" click or prompt) ===== */
@@ -333,64 +341,38 @@ export default function App() {
           transform: `scale(${scale})`,
         }}
       >
-        {/* Window chrome — traffic-light cluster.
-            Anchored to the big bubble's top-left so it sits consistently on the
-            glass bubble in both Q3 and BI flows. Hidden during landing. */}
+        {/* Clickable overlays on top of the chrome-dots image (drawn by the
+            left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
+            Three equal horizontal zones: close, minimize, fullscreen. */}
         <div
           style={{
             position: 'absolute',
-            // big bubble top-left corner is at ( 960 - 1817/2 , (600+49) - 990/2 )
-            // = (51.5, 154). Inset 24px for breathing room.
-            left: 'calc(50% - 884.5px)',
-            top: 'calc(50% - 422px)',
-            zIndex: 100, display: 'flex', gap: '8px', alignItems: 'center',
+            // canvas (101.5, 204) = (50% - 858.5px, 50% - 396px); size 120.96×30.319
+            left: 'calc(50% - 858.5px)',
+            top: 'calc(50% - 396px)',
+            width: '120.96px', height: '30.319px',
+            zIndex: 100,
+            display: 'flex',
             opacity: phase === 'landing' ? 0 : 1,
             pointerEvents: phase === 'landing' ? 'none' : 'auto',
             transition: 'opacity 400ms ease',
           }}
         >
-          {/* Close → reset to landing */}
           <button
             onClick={handleClose}
             title="Close"
-            style={{
-              width: '14px', height: '14px', borderRadius: '50%',
-              background: '#FF5F57', border: '0.5px solid rgba(0,0,0,0.15)',
-              cursor: 'pointer', padding: 0, lineHeight: 1,
-              fontSize: '9px', color: 'rgba(0,0,0,0.5)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            ×
-          </button>
-          {/* Minimize → tiny Q3 preview in lower-left */}
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
           <button
             onClick={handleMinimize}
             title="Minimize"
-            style={{
-              width: '14px', height: '14px', borderRadius: '50%',
-              background: '#FEBC2E', border: '0.5px solid rgba(0,0,0,0.15)',
-              cursor: 'pointer', padding: 0, lineHeight: 1,
-              fontSize: '14px', color: 'rgba(0,0,0,0.5)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            −
-          </button>
-          {/* Fullscreen → browser fullscreen (glass bubble fills screen) */}
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
           <button
             onClick={toggleFullscreen}
             title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-            style={{
-              width: '14px', height: '14px', borderRadius: '50%',
-              background: '#28C840', border: '0.5px solid rgba(0,0,0,0.15)',
-              cursor: 'pointer', padding: 0, lineHeight: 1,
-              fontSize: '9px', color: 'rgba(0,0,0,0.5)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            {isFullscreen ? '⤡' : '⤢'}
-          </button>
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
         </div>
 
         {/* Main SessionShell — hidden when minimized */}
