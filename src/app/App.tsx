@@ -83,12 +83,15 @@ export default function App() {
   const handleClose = useCallback(() => {
     clearTimers();
     setEndSessionVisible(false);
-    setChatMessages([]);
-    setScreen('q3-summary');
-    setFlow('q3');
+    // Don't switch flow/screen here — that would swap the left-content map
+    // mid-fade-out and briefly flash the other flow's content. Just collapse
+    // the bubble; chat is cleared after it has fully shrunk.
     setPhase('landing');
     setWindowMode('normal');
-  }, [clearTimers]);
+    // Clear chat only after the bubble has finished shrinking, so nothing
+    // rerenders visibly during the transition.
+    addTimer(() => setChatMessages([]), EXPAND_DURATION);
+  }, [addTimer, clearTimers]);
 
   const handleMinimize = useCallback(() => {
     setWindowMode('minimized');
@@ -364,13 +367,13 @@ export default function App() {
             style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           />
           <button
-            onClick={handleMinimize}
-            title="Minimize"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           />
           <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            onClick={handleMinimize}
+            title="Minimize"
             style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           />
         </div>
