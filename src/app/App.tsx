@@ -168,6 +168,13 @@ export default function App() {
             text: "Collected this year's earning data. Please confirm if these are the documents you wish to include.",
           };
           break;
+        case 'bi-dashboard':
+          aiMsg = {
+            id: 'ai-bi-generated',
+            role: 'ai',
+            text: 'BI generated for fiscal year 2025-2026. Review the dashboard and share when ready.',
+          };
+          break;
         case 'bi-email':
           aiMsg = {
             id: 'ai-bi-forwarding',
@@ -246,8 +253,14 @@ export default function App() {
 
   /* ===== BI flow: advance docs → dashboard (via "Create BI" click or prompt) ===== */
   const advanceToDashboard = useCallback(() => {
-    setScreen('bi-dashboard');
-  }, []);
+    pushMessages({
+      id: 'user-bi-create',
+      role: 'user',
+      text: 'Create BI for fiscal year 2025-2026',
+    });
+    addTimer(() => setScreen('bi-dashboard'), 400);
+    scheduleAIReply('bi-dashboard', 400 + LEFT_CROSSFADE);
+  }, [addTimer, pushMessages, scheduleAIReply]);
 
   /* ===== BI flow: advance dashboard → email (via "share" click or "forward" prompt) ===== */
   const advanceToEmail = useCallback(() => {

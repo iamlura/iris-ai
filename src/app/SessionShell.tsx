@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, ReactNode } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, ReactNode } from 'react';
 import svgPaths from '../imports/svg-xjlncwwdvr';
 
 /* ===== Timing constants (per spec) ===== */
@@ -221,9 +221,15 @@ function ChatInput({
 /* ===== Pill (the one element that expands/shrinks) ===== */
 function Pill({
   expanded,
+  smallWidth,
+  isTransitioning,
   children,
 }: {
   expanded: boolean;
+  /** Width to use when not expanded — grows with landing input text. */
+  smallWidth: number;
+  /** True when expanding/shrinking — use slow 2s width transition; otherwise fast. */
+  isTransitioning: boolean;
   children: ReactNode;
 }) {
   return (
@@ -233,10 +239,12 @@ function Pill({
         left: '50%',
         top: expanded ? PILL_LARGE_TOP : PILL_SMALL_TOP,
         transform: 'translate(-50%, -50%)',
-        width: expanded ? `${PILL_LARGE_W}px` : `${PILL_SMALL_W}px`,
+        width: expanded ? `${PILL_LARGE_W}px` : `${smallWidth}px`,
         height: expanded ? `${PILL_LARGE_H}px` : `${PILL_SMALL_H}px`,
         borderRadius: '60px',
-        transition: `width ${EXPAND_DURATION}ms ease-in-out, height ${EXPAND_DURATION}ms ease-in-out, top ${EXPAND_DURATION}ms ease-in-out`,
+        transition: isTransitioning
+          ? `width ${EXPAND_DURATION}ms ease-in-out, height ${EXPAND_DURATION}ms ease-in-out, top ${EXPAND_DURATION}ms ease-in-out`
+          : `width 160ms ease-out, height ${EXPAND_DURATION}ms ease-in-out, top ${EXPAND_DURATION}ms ease-in-out`,
         overflow: 'visible',
         zIndex: 5,
       }}
@@ -285,6 +293,14 @@ export default function SessionShell({
   const { date, time } = useLiveClock();
   const [inputValue, setInputValue] = useState('');
 
+  // Measured pixel width of landing input text (or placeholder when empty).
+  // Used to grow the small pill while typing, maintaining 94px L/R padding.
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [textWidth, setTextWidth] = useState(0);
+  useLayoutEffect(() => {
+    if (measureRef.current) setTextWidth(measureRef.current.offsetWidth);
+  }, [inputValue]);
+
   // Clear input whenever phase changes back to landing
   useEffect(() => {
     if (phase === 'landing') setInputValue('');
@@ -309,6 +325,20 @@ export default function SessionShell({
   const expanded = phase === 'expanding' || phase === 'content' || phase === 'ending';
   const contentVisible = phase === 'content';
   const landingTextVisible = phase === 'landing';
+  // Slow 2s pill transition only during expanding/shrinking (not while typing).
+  const isExpandShrinking = phase === 'expanding' || phase === 'shrinking';
+
+  // Compute small-pill width: PILL_SMALL_W default; grow to fit text plus 94px
+  // padding on each side, mic icon (13.895), and 22px gap. Add a small buffer
+  // for the caret so the cursor doesn't cling to the edge.
+  const MIC_W = 13.895;
+  const GAP = 22;
+  const PAD = 94;
+  const CARET_BUF = 6;
+  const smallPillWidth = Math.max(
+    PILL_SMALL_W,
+    PAD * 2 + MIC_W + GAP + textWidth + CARET_BUF,
+  );
 
   // Track which messages were just added (for slide-up animation on the newest one)
   const prevIdsRef = useRef<Set<string>>(new Set());
@@ -319,6 +349,13 @@ export default function SessionShell({
   useEffect(() => {
     prevIdsRef.current = new Set(chatMessages.map(m => m.id));
   });
+
+  // Keep newest messages in view if the chat overflows the available height.
+  const chatColRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = chatColRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [chatMessages.length]);
 
   return (
     <div
@@ -344,8 +381,27 @@ export default function SessionShell({
         <p style={{ fontFamily: "'Google_Sans', sans-serif", lineHeight: 0.91, opacity: 0.8, fontSize: '36px', letterSpacing: '-1.08px', fontWeight: 500, margin: 0 }}>{time}</p>
       </div>
 
+      {/* Hidden span — measures text width so the small pill can grow with input. */}
+      <span
+        ref={measureRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          visibility: 'hidden',
+          whiteSpace: 'pre',
+          pointerEvents: 'none',
+          fontFamily: "'Google_Sans', sans-serif",
+          fontSize: '24.951px',
+          lineHeight: 1.5,
+          left: '-9999px',
+          top: 0,
+        }}
+      >
+        {inputValue === '' ? '|Ask Anything' : inputValue}
+      </span>
+
       {/* The pill — single element, animates */}
-      <Pill expanded={expanded}>
+      <Pill expanded={expanded} smallWidth={smallPillWidth} isTransitioning={isExpandShrinking}>
         {/* ===== Small (landing) content ===== */}
         <div
           style={{
@@ -489,7 +545,10 @@ export default function SessionShell({
             end session
           </button>
 
-          {/* Chat messages column */}
+          {/* Chat messages column — anchor newest to the bottom so the
+              latest user/AI exchange is always visible above the input.
+              Older messages are pushed up; the scroll area shows everything
+              that fits the available height. */}
           <div
             style={{
               position: 'absolute',
@@ -499,9 +558,13 @@ export default function SessionShell({
               height: 'calc(100% - 190px)',
               display: 'flex',
               flexDirection: 'column',
+              justifyContent: 'flex-end',
               gap: '20px',
-              overflow: 'hidden',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              scrollbarWidth: 'none',
             }}
+            ref={chatColRef}
           >
             {chatMessages.map(m => (
               <ChatBubble key={m.id} msg={m} justAdded={justAddedIds.has(m.id)} />

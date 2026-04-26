@@ -5,11 +5,13 @@
  * handles crossfading between them via opacity layers.
  */
 
+// Local user-provided calendar screenshot (replaces Figma export).
+import imgCalendar from '../assets/outlook-schedule.png';
+
 // Asset URLs from Figma (same as original Frame2055246625)
 const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/df1ee347-b571-4056-88d5-48e05d6b6c1d";
 const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/24fc519f-dd12-4ac9-b597-d0999b655b0a";
 const imgGroup1010109929  = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
-const imgCalendar         = "https://www.figma.com/api/mcp/asset/d092aea3-2af3-4163-8546-4cc83f9fa40a";
 
 /* ==========================================================================
    Q3 SUMMARY
@@ -29,14 +31,15 @@ export function Q3SummaryLeft() {
         <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
       </div>
 
-      {/* Sidebar thumbnails strip */}
+      {/* Sidebar thumbnails strip — bottom-aligned to white doc area
+          (white doc: top=85, height=820, bottom=905; sidebar bottom=905) */}
       <div style={{
         position: 'absolute',
         width: '151px',
         height: '723px',
         left: '50px',
-        top: '120px',
-        borderRadius: '20px 20px 50px 20px',
+        top: '182px',
+        borderRadius: '20px 20px 20px 50px',
         overflow: 'hidden',
       }}>
         <div style={{ position: 'absolute', width: '151.238px', height: '85.072px', left: 0, top: 0, borderRadius: '20px' }}>
