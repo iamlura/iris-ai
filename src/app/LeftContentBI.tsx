@@ -221,7 +221,7 @@ export function BIActionButtons({ variant, onCreateBI, onShare }: { variant: 'ed
     <div
       style={{
         position: 'absolute',
-        right: '673.5px',
+        right: '323.5px',
         top: '53px',
         display: 'flex',
         gap: '16px',
