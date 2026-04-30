@@ -118,15 +118,18 @@ function ChatBubble({ msg, justAdded }: { msg: ChatMessage; justAdded: boolean }
     whiteSpace: 'normal',
   };
 
+  // AI replies render as plain text on the grey chat background — no bubble,
+  // flush to the chat column's left edge (40px from pill edge already applied
+  // by the chat container).
   const aiStyle: React.CSSProperties = {
     alignSelf: 'flex-start',
-    padding: '0 20px',
+    padding: 0,
     fontFamily: "'Google_Sans', sans-serif",
     fontSize: '16px',
     color: 'black',
     opacity: mounted ? 1 : 0,
     transition: `opacity ${AI_BUBBLE_FADE}ms ease-in-out`,
-    maxWidth: '340px',
+    maxWidth: '353.75px',
     lineHeight: 1.5,
   };
 
@@ -520,13 +523,13 @@ export default function SessionShell({
             }}
           />
 
-          {/* End session button — top-right of chat column */}
+          {/* End session button — 40px from top, 40px from right of pill */}
           <button
             onClick={onEndSession}
             style={{
               position: 'absolute',
-              top: '60px',
-              right: '52px',
+              top: '40px',
+              right: '40px',
               background: '#960000',
               border: 'none',
               color: 'white',
@@ -548,18 +551,22 @@ export default function SessionShell({
           {/* Chat messages column — anchor newest to the bottom so the
               latest user/AI exchange is always visible above the input.
               Older messages are pushed up; the scroll area shows everything
-              that fits the available height. */}
+              that fits the available height.
+              Spec: 40px top → end-session (~34px) → 60px gap → first user bubble.
+              Top = 40 + 34 + 60 ≈ 134px. 28px gap between bubbles.
+              40px L/R margin from chat column edges. Chat column is 433.75 wide
+              on the right side of the pill, so content width = 433.75 - 80 = 353.75. */}
           <div
             style={{
               position: 'absolute',
-              right: '20px',
-              top: '110px',
-              width: '394px',
-              height: 'calc(100% - 190px)',
+              right: '40px',
+              top: '134px',
+              width: '353.75px',
+              bottom: '100px', // input (~48px) + 18px above + 16px below + ~18px buffer
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
-              gap: '20px',
+              gap: '28px',
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollbarWidth: 'none',
@@ -571,13 +578,13 @@ export default function SessionShell({
             ))}
           </div>
 
-          {/* Chat input — bottom of chat column */}
+          {/* Chat input — 16px from pill bottom, 16px from L/R of chat column */}
           <div
             style={{
               position: 'absolute',
-              right: '20px',
-              bottom: '20px',
-              width: '394px',
+              right: '16px',
+              bottom: '16px',
+              width: '401.75px', // 433.75 - 16 - 16
             }}
           >
             <ChatInput

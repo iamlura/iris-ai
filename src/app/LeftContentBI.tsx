@@ -80,57 +80,57 @@ export function BIDocsLeft() {
       {/* Document grid */}
       <div style={{ position: 'absolute', height: '815px', left: '70px', top: '176px', width: '1062px', overflow: 'hidden' }}>
         {/* Col 0 */}
-        <div style={{ position: 'absolute', height: '314.715px', left: 0, top: '0.07px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: 0, top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '119.94%', left: '-6.6%', top: '-12.67%', width: '230.06%' }} src={imgRect12} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '0.03px', top: '342.79px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '0.03px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: 0, top: 0, width: '200.92%' }} src={imgRect15} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '0.03px', top: '682.96px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '0.03px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: 0, top: 0, width: '309.82%' }} src={imgRect20} />
           </div>
         </div>
         {/* Col 1 */}
-        <div style={{ position: 'absolute', height: '314.715px', left: '272.74px', top: '0.07px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-3.31%', top: 0, width: '206.61%' }} src={imgRect13} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '272.74px', top: '342.79px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-100.92%', top: 0, width: '200.92%' }} src={imgRect15} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '272.74px', top: '682.96px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect21} />
         </div>
         {/* Col 2 */}
-        <div style={{ position: 'absolute', height: '314.715px', left: '545.45px', top: '0.07px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-5.89%', top: 0, width: '274.65%' }} src={imgRect14} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '545.45px', top: '342.79px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect17} />
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '545.45px', top: '682.96px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect22} />
         </div>
         {/* Col 3 */}
-        <div style={{ position: 'absolute', height: '314.715px', left: '818.16px', top: '0.07px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect18} />
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '818.16px', top: '342.79px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
             <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-8.01%', top: 0, width: '229.57%' }} src={imgRect19} />
           </div>
         </div>
-        <div style={{ position: 'absolute', height: '314.715px', left: '818.16px', top: '682.96px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
+        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect23} />
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import SessionShell, { Phase, ChatMessage } from './SessionShell';
 import { Q3SummaryLeft, CalendarLeft } from './LeftContentQ3';
 import { BIDocsLeft, BIDashboardLeft, EmailLeft, BIActionButtons } from './LeftContentBI';
+import DocsStrip from './DocsStrip';
 
 /* ===== Timing constants (must match SessionShell) ===== */
 const EXPAND_DELAY = 800;
@@ -60,7 +61,11 @@ export default function App() {
   }, []);
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  /* ===== Responsive scale ===== */
+  /* ===== Responsive scale =====
+   * Scale is computed against a 1920×1200 reference so the pill stays the
+   * same visual size as before. The inner container is taller (1700) to
+   * accommodate the "Documents included" strip below the pill — that extra
+   * 500px overflows the viewport and the page scrolls vertically. */
   useEffect(() => {
     const update = () => {
       const sx = window.innerWidth / 1920;
@@ -371,117 +376,138 @@ export default function App() {
       )
     : null;
 
+  // The DocsStrip appears whenever the expanded card content is visible.
+  const stripVisible = phase === 'content' || phase === 'expanding' || phase === 'ending';
+
   return (
     <div
       style={{
         width: '100vw',
-        height: '100vh',
+        minHeight: '100vh',
         background: '#F4F4F9',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'auto',
       }}
     >
       <div
         style={{
           width: '1920px',
-          height: '1200px',
+          height: '1700px',
           position: 'relative',
+          flexShrink: 0,
           transformOrigin: 'center center',
           transform: `scale(${scale})`,
         }}
       >
-        {/* Clickable overlays on top of the chrome-dots image (drawn by the
-            left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
-            Three equal horizontal zones: close, minimize, fullscreen. */}
+        {/* SessionShell + chrome live in the original 1920×1200 frame so all
+            existing percent-based positioning (calc(50% ± …)) still works. */}
         <div
           style={{
             position: 'absolute',
-            // canvas (101.5, 204) = (50% - 858.5px, 50% - 396px); size 120.96×30.319
-            left: 'calc(50% - 858.5px)',
-            top: 'calc(50% - 396px)',
-            width: '120.96px', height: '30.319px',
-            zIndex: 100,
-            display: 'flex',
-            opacity: phase === 'landing' ? 0 : 1,
-            pointerEvents: phase === 'landing' ? 'none' : 'auto',
-            transition: 'opacity 400ms ease',
+            left: 0,
+            top: 0,
+            width: '1920px',
+            height: '1200px',
           }}
         >
-          <button
-            onClick={handleClose}
-            title="Close"
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-          <button
-            onClick={handleMinimize}
-            title="Minimize"
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-        </div>
-
-        {/* Main SessionShell — always rendered. When minimized, phase is
-            'landing' so it shrinks to the small pill and the Ask Anything
-            input is active. */}
-        <div style={{ width: '100%', height: '100%' }}>
-          <SessionShell
-            phase={phase}
-            flow={flow}
-            leftContentKey={screen}
-            leftContents={leftContents}
-            chatMessages={chatMessages}
-            endSessionVisible={endSessionVisible}
-            onSubmit={onSubmit}
-            onEndSession={handleEndSession}
-            leftOverlay={leftOverlay}
-          />
-        </div>
-
-        {/* Minimized preview — small square with Q3 summary, lower-left, 20/20 gap */}
-        {windowMode === 'minimized' && (
-          <button
-            onClick={handleRestore}
-            title="Restore"
+          {/* Clickable overlays on top of the chrome-dots image (drawn by the
+              left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
+              Three equal horizontal zones: close, minimize, fullscreen. */}
+          <div
             style={{
-              position: 'absolute', bottom: '20px', left: '20px',
-              width: '180px', height: '180px',
-              borderRadius: '18px',
-              padding: 0, border: 'none',
-              overflow: 'hidden', cursor: 'pointer',
-              background: '#F4F4F9',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)',
-              zIndex: 101,
+              position: 'absolute',
+              // canvas (101.5, 204) = (50% - 858.5px, 50% - 396px); size 120.96×30.319
+              left: 'calc(50% - 858.5px)',
+              top: 'calc(50% - 396px)',
+              width: '120.96px', height: '30.319px',
+              zIndex: 100,
+              display: 'flex',
+              opacity: phase === 'landing' ? 0 : 1,
+              pointerEvents: phase === 'landing' ? 'none' : 'auto',
+              transition: 'opacity 400ms ease',
             }}
           >
-            {/* Scaled-down preview of the minimized flow + screen */}
-            <div style={{
-              position: 'absolute',
-              width: '1383.25px', height: '990px',
-              transform: `translate(-50%, -50%) scale(${180 / 990})`,
-              transformOrigin: 'center center',
-              top: '50%', left: '50%',
-              pointerEvents: 'none',
-            }}>
-              {(() => {
-                const snap = minimizedSession;
-                if (!snap) return <Q3SummaryLeft />;
-                if (snap.flow === 'q3') {
-                  return snap.screen === 'calendar' ? <CalendarLeft /> : <Q3SummaryLeft />;
-                }
-                // BI
-                if (snap.screen === 'bi-dashboard') return <BIDashboardLeft />;
-                if (snap.screen === 'bi-email') return <EmailLeft />;
-                return <BIDocsLeft />;
-              })()}
-            </div>
-          </button>
-        )}
+            <button
+              onClick={handleClose}
+              title="Close"
+              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+            />
+            <button
+              onClick={toggleFullscreen}
+              title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+            />
+            <button
+              onClick={handleMinimize}
+              title="Minimize"
+              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+            />
+          </div>
+
+          {/* Main SessionShell — always rendered. When minimized, phase is
+              'landing' so it shrinks to the small pill and the Ask Anything
+              input is active. */}
+          <div style={{ width: '100%', height: '100%' }}>
+            <SessionShell
+              phase={phase}
+              flow={flow}
+              leftContentKey={screen}
+              leftContents={leftContents}
+              chatMessages={chatMessages}
+              endSessionVisible={endSessionVisible}
+              onSubmit={onSubmit}
+              onEndSession={handleEndSession}
+              leftOverlay={leftOverlay}
+            />
+          </div>
+
+          {/* Minimized preview — small square with current snap, lower-left, 20/20 gap */}
+          {windowMode === 'minimized' && (
+            <button
+              onClick={handleRestore}
+              title="Restore"
+              style={{
+                position: 'absolute', bottom: '20px', left: '20px',
+                width: '180px', height: '180px',
+                borderRadius: '18px',
+                padding: 0, border: 'none',
+                overflow: 'hidden', cursor: 'pointer',
+                background: '#F4F4F9',
+                boxShadow: '0 12px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)',
+                zIndex: 101,
+              }}
+            >
+              {/* Scaled-down preview of the minimized flow + screen */}
+              <div style={{
+                position: 'absolute',
+                width: '1383.25px', height: '990px',
+                transform: `translate(-50%, -50%) scale(${180 / 990})`,
+                transformOrigin: 'center center',
+                top: '50%', left: '50%',
+                pointerEvents: 'none',
+              }}>
+                {(() => {
+                  const snap = minimizedSession;
+                  if (!snap) return <Q3SummaryLeft />;
+                  if (snap.flow === 'q3') {
+                    return snap.screen === 'calendar' ? <CalendarLeft /> : <Q3SummaryLeft />;
+                  }
+                  // BI
+                  if (snap.screen === 'bi-dashboard') return <BIDashboardLeft />;
+                  if (snap.screen === 'bi-email') return <EmailLeft />;
+                  return <BIDocsLeft />;
+                })()}
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* "Documents included in the file" strip — sibling of the pill area
+            so it can extend below the 1200 frame and the page scrolls. */}
+        <DocsStrip visible={stripVisible} />
       </div>
     </div>
   );
