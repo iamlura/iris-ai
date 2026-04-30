@@ -31,7 +31,7 @@ function LeftFrame({
     <div style={{
       position: 'absolute',
       inset: '20px',
-      borderRadius: '50px',
+      borderRadius: '55px',
       overflow: 'hidden',
       background,
       display: centered ? 'flex' : 'block',

@@ -26,13 +26,12 @@ function LeftFrame({
     <div style={{
       position: 'absolute',
       inset: '20px',
-      borderRadius: '50px',
+      borderRadius: '55px',
       overflow: 'hidden',
       background,
       display: centered ? 'flex' : 'block',
       alignItems: centered ? 'center' : undefined,
       justifyContent: centered ? 'center' : undefined,
-      gap: centered ? '18px' : undefined,
     }}>
       {children}
     </div>
@@ -44,69 +43,73 @@ function LeftFrame({
    Shows sidebar with thumbnail strip + white doc area with "Q3 Summary" title.
    ========================================================================== */
 export function Q3SummaryLeft() {
-  // Per Figma 1-1779: sidebar 166.12 × 795.4, doc 1337.12 × 795.4, gap 18.
-  // Total content width 1521.24 exceeds frame inner 1343.25 — overflow clips
-  // by design.
-  const SIDEBAR_W = 166.12;
-  const DOC_W = 1337.12;
-  const H = 795.4;
-  // Match Figma proportional thumb count and spacing inside taller sidebar.
-  const THUMB_H = (H / 8.51); // sidebar fits ~8.5 thumbs vertically (was 723→8 thumbs)
+  // Doc preview on top, slide deck thumbnails as a horizontal strip below.
+  const STRIP_W = 1300;
+  const DOC_H = 720;
+  const THUMB_CLIPS = [
+    { w: '303.93%', h: '300.42%', l: '0', t: '0' },
+    { w: '303.93%', h: '310.94%', l: '0', t: '-105.85%' },
+    { w: '303.93%', h: '308.53%', l: '0', t: '-207.35%' },
+    { w: '305.5%',  h: '305.95%', l: '-102.29%', t: '-1.5%' },
+    { w: '302.45%', h: '301.42%', l: '-201.83%', t: '0' },
+    { w: '304.61%', h: '311.29%', l: '-102.99%', t: '-208.35%' },
+    { w: '302.53%', h: '311.29%', l: '-201.6%', t: '-208.35%' },
+  ] as const;
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <LeftFrame>
-        {/* Sidebar slide deck */}
-        <div style={{
-          width: `${SIDEBAR_W}px`,
-          height: `${H}px`,
-          borderRadius: '20px 20px 20px 50px',
-          overflow: 'hidden',
-          position: 'relative',
-          flexShrink: 0,
-        }}>
-          <div style={{ position: 'absolute', width: `${SIDEBAR_W}px`, height: `${THUMB_H}px`, left: 0, top: 0, borderRadius: '20px' }}>
-            <img alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '20px' }} src={imgRectangle3473784} />
-          </div>
-          {([
-            { idx: 1, clip: { w: '303.93%', h: '300.42%', l: '0', t: '0' } },
-            { idx: 2, clip: { w: '303.93%', h: '310.94%', l: '0', t: '-105.85%' } },
-            { idx: 3, clip: { w: '303.93%', h: '308.53%', l: '0', t: '-207.35%' } },
-            { idx: 4, clip: { w: '305.5%', h: '305.95%', l: '-102.29%', t: '-1.5%' } },
-            { idx: 5, clip: { w: '302.45%', h: '301.42%', l: '-201.83%', t: '0' } },
-            { idx: 6, clip: { w: '304.61%', h: '311.29%', l: '-102.99%', t: '-208.35%' } },
-            { idx: 7, clip: { w: '302.53%', h: '311.29%', l: '-201.6%', t: '-208.35%' } },
-          ] as const).map(({ idx, clip }, i) => (
-            <div key={i} style={{ position: 'absolute', width: `${SIDEBAR_W}px`, height: `${THUMB_H}px`, left: 0, top: `${idx * THUMB_H}px`, borderRadius: '20px', overflow: 'hidden' }}>
-              <img alt="" style={{ position: 'absolute', maxWidth: 'none', width: clip.w, height: clip.h, left: clip.l, top: clip.t }} src={imgRectangle3473785} />
-            </div>
-          ))}
-        </div>
-
-        {/* White doc preview */}
-        <div style={{
-          width: `${DOC_W}px`,
-          height: `${H}px`,
-          background: 'white',
-          borderRadius: '20px',
-          opacity: 0.8,
-          position: 'relative',
-          flexShrink: 0,
-        }}>
-          <p style={{
-            position: 'absolute',
-            left: '50px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            fontFamily: "'Google_Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: '52.054px',
-            color: 'black',
-            lineHeight: 1.5,
-            margin: 0,
-            whiteSpace: 'nowrap',
+        <div style={{ width: `${STRIP_W}px`, display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          {/* White doc preview */}
+          <div style={{
+            width: '100%',
+            height: `${DOC_H}px`,
+            background: 'white',
+            borderRadius: '20px',
+            opacity: 0.8,
+            position: 'relative',
           }}>
-            Q3 Summary
-          </p>
+            <p style={{
+              position: 'absolute',
+              left: '50px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontFamily: "'Google_Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: '52.054px',
+              color: 'black',
+              lineHeight: 1.5,
+              margin: 0,
+              whiteSpace: 'nowrap',
+            }}>
+              Q3 Summary
+            </p>
+          </div>
+
+          {/* Slide deck — 8 thumbnails laid horizontally */}
+          <div style={{
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(8, 1fr)',
+            gap: '13px',
+          }}>
+            <div style={{
+              aspectRatio: '151.238 / 85.072',
+              borderRadius: '20px',
+              overflow: 'hidden',
+            }}>
+              <img alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={imgRectangle3473784} />
+            </div>
+            {THUMB_CLIPS.map((clip, i) => (
+              <div key={i} style={{
+                aspectRatio: '151.238 / 85.072',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                position: 'relative',
+              }}>
+                <img alt="" style={{ position: 'absolute', maxWidth: 'none', width: clip.w, height: clip.h, left: clip.l, top: clip.t }} src={imgRectangle3473785} />
+              </div>
+            ))}
+          </div>
         </div>
       </LeftFrame>
     </div>
