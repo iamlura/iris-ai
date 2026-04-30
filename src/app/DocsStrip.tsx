@@ -59,7 +59,7 @@ export default function DocsStrip({ visible }: Props) {
           color: 'black',
           opacity: 0.5,
           textAlign: 'center',
-          margin: '0 0 14px',
+          margin: '0 0 70px',
           lineHeight: 1.5,
         }}
       >
