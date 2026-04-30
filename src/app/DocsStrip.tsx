@@ -42,8 +42,8 @@ export default function DocsStrip({ visible }: Props) {
         position: 'absolute',
         left: '50%',
         // Pill is centered vertically in the 2080-tall inner, so its bottom
-        // edge is at calc(50% + 495px). Strip starts immediately below.
-        top: 'calc(50% + 495px)',
+        // edge is at calc(50% + 495px). Strip starts 70px below.
+        top: 'calc(50% + 495px + 70px)',
         transform: 'translateX(-50%)',
         width: `${STRIP_W}px`,
         opacity: visible ? 1 : 0,
