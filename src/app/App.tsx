@@ -62,14 +62,15 @@ export default function App() {
   useEffect(() => () => clearTimers(), [clearTimers]);
 
   /* ===== Responsive scale =====
-   * Scale is computed against a 1920×1200 reference so the pill stays the
-   * same visual size as before. The inner container is taller (1700) to
-   * accommodate the "Documents included" strip below the pill — that extra
-   * 500px overflows the viewport and the page scrolls vertically. */
+   * Inner is 1920×2080 — pill (990) lives at vertical center, docs strip
+   * (~545) sits immediately below. Scale uses 2080 in the height denominator
+   * so the entire layout fits the viewport (no top crop, no scroll), and the
+   * pill ends up perfectly centered in screen because it is at the inner's
+   * vertical center. */
   useEffect(() => {
     const update = () => {
       const sx = window.innerWidth / 1920;
-      const sy = window.innerHeight / 1200;
+      const sy = window.innerHeight / 2080;
       setScale(Math.min(sx, sy));
     };
     update();
@@ -291,33 +292,6 @@ export default function App() {
     scheduleEndSessionButton(400 + LEFT_CROSSFADE + END_SESSION_DELAY);
   }, [addTimer, pushMessages, scheduleAIReply, scheduleEndSessionButton]);
 
-  /* ===== Handle user typing prompts inside the expanded card ===== */
-  const handleInCardSubmit = useCallback((text: string) => {
-    if (flow === 'q3' && screen === 'q3-summary') {
-      advanceToCalendar();
-      return;
-    }
-    if (flow === 'bi' && screen === 'bi-docs') {
-      // Typing anything in docs view advances like "Create BI" click
-      advanceToDashboard();
-      return;
-    }
-    if (flow === 'bi' && screen === 'bi-dashboard') {
-      advanceToEmail();
-      return;
-    }
-    void text;
-  }, [flow, screen, advanceToCalendar, advanceToDashboard, advanceToEmail]);
-
-  /* ===== Combined submit handler routed by phase ===== */
-  const onSubmit = useCallback((text: string) => {
-    if (phase === 'landing') {
-      handleLandingSubmit(text);
-    } else if (phase === 'content') {
-      handleInCardSubmit(text);
-    }
-  }, [phase, handleLandingSubmit, handleInCardSubmit]);
-
   /* ===== End session: shrink + loop back to landing =====
    *
    * Sequence (timings from user spec):
@@ -353,6 +327,48 @@ export default function App() {
     }, CONTENT_FADE + SHRINK_DELAY);
   }, [addTimer, clearTimers, flow]);
 
+  /* ===== Handle user typing prompts inside the expanded card =====
+   * Special keyword: "end" (case-insensitive, exact after trim) — shows the
+   * input as a normal user chat bubble, then triggers the end-session flow
+   * (same effect as clicking the red end-session button). Any other text
+   * advances the current screen per the existing flow logic. */
+  const handleInCardSubmit = useCallback((text: string) => {
+    if (text.trim().toLowerCase() === 'end') {
+      pushMessages({
+        id: `user-end-${Date.now()}`,
+        role: 'user',
+        text: 'end',
+      });
+      // Wait for the user bubble to land (slide-up ≈ 400ms) before kicking
+      // off the shrink sequence so the bubble is briefly visible.
+      addTimer(() => handleEndSession(), 600);
+      return;
+    }
+    if (flow === 'q3' && screen === 'q3-summary') {
+      advanceToCalendar();
+      return;
+    }
+    if (flow === 'bi' && screen === 'bi-docs') {
+      // Typing anything in docs view advances like "Create BI" click
+      advanceToDashboard();
+      return;
+    }
+    if (flow === 'bi' && screen === 'bi-dashboard') {
+      advanceToEmail();
+      return;
+    }
+    void text;
+  }, [flow, screen, advanceToCalendar, advanceToDashboard, advanceToEmail, handleEndSession, pushMessages, addTimer]);
+
+  /* ===== Combined submit handler routed by phase ===== */
+  const onSubmit = useCallback((text: string) => {
+    if (phase === 'landing') {
+      handleLandingSubmit(text);
+    } else if (phase === 'content') {
+      handleInCardSubmit(text);
+    }
+  }, [phase, handleLandingSubmit, handleInCardSubmit]);
+
   /* ===== Build leftContents map for current flow ===== */
   const leftContents = flow === 'q3'
     ? {
@@ -383,131 +399,117 @@ export default function App() {
     <div
       style={{
         width: '100vw',
-        minHeight: '100vh',
+        height: '100vh',
         background: '#F4F4F9',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflowX: 'hidden',
-        overflowY: 'auto',
+        overflow: 'hidden',
       }}
     >
       <div
         style={{
           width: '1920px',
-          height: '1700px',
+          height: '2080px',
           position: 'relative',
           flexShrink: 0,
           transformOrigin: 'center center',
           transform: `scale(${scale})`,
         }}
       >
-        {/* SessionShell + chrome live in the original 1920×1200 frame so all
-            existing percent-based positioning (calc(50% ± …)) still works. */}
+        {/* Clickable overlays on top of the chrome-dots image (drawn by the
+            left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
+            Pill is now centered in the 2080-tall inner with no +49 offset, so
+            chrome top = pill_top_edge + 50 = (50% - 495 + 50) = 50% - 445. */}
         <div
           style={{
             position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '1920px',
-            height: '1200px',
+            left: 'calc(50% - 858.5px)',
+            top: 'calc(50% - 445px)',
+            width: '120.96px', height: '30.319px',
+            zIndex: 100,
+            display: 'flex',
+            opacity: phase === 'landing' ? 0 : 1,
+            pointerEvents: phase === 'landing' ? 'none' : 'auto',
+            transition: 'opacity 400ms ease',
           }}
         >
-          {/* Clickable overlays on top of the chrome-dots image (drawn by the
-              left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
-              Three equal horizontal zones: close, minimize, fullscreen. */}
-          <div
-            style={{
-              position: 'absolute',
-              // canvas (101.5, 204) = (50% - 858.5px, 50% - 396px); size 120.96×30.319
-              left: 'calc(50% - 858.5px)',
-              top: 'calc(50% - 396px)',
-              width: '120.96px', height: '30.319px',
-              zIndex: 100,
-              display: 'flex',
-              opacity: phase === 'landing' ? 0 : 1,
-              pointerEvents: phase === 'landing' ? 'none' : 'auto',
-              transition: 'opacity 400ms ease',
-            }}
-          >
-            <button
-              onClick={handleClose}
-              title="Close"
-              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-            />
-            <button
-              onClick={toggleFullscreen}
-              title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-            />
-            <button
-              onClick={handleMinimize}
-              title="Minimize"
-              style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-            />
-          </div>
-
-          {/* Main SessionShell — always rendered. When minimized, phase is
-              'landing' so it shrinks to the small pill and the Ask Anything
-              input is active. */}
-          <div style={{ width: '100%', height: '100%' }}>
-            <SessionShell
-              phase={phase}
-              flow={flow}
-              leftContentKey={screen}
-              leftContents={leftContents}
-              chatMessages={chatMessages}
-              endSessionVisible={endSessionVisible}
-              onSubmit={onSubmit}
-              onEndSession={handleEndSession}
-              leftOverlay={leftOverlay}
-            />
-          </div>
-
-          {/* Minimized preview — small square with current snap, lower-left, 20/20 gap */}
-          {windowMode === 'minimized' && (
-            <button
-              onClick={handleRestore}
-              title="Restore"
-              style={{
-                position: 'absolute', bottom: '20px', left: '20px',
-                width: '180px', height: '180px',
-                borderRadius: '18px',
-                padding: 0, border: 'none',
-                overflow: 'hidden', cursor: 'pointer',
-                background: '#F4F4F9',
-                boxShadow: '0 12px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)',
-                zIndex: 101,
-              }}
-            >
-              {/* Scaled-down preview of the minimized flow + screen */}
-              <div style={{
-                position: 'absolute',
-                width: '1383.25px', height: '990px',
-                transform: `translate(-50%, -50%) scale(${180 / 990})`,
-                transformOrigin: 'center center',
-                top: '50%', left: '50%',
-                pointerEvents: 'none',
-              }}>
-                {(() => {
-                  const snap = minimizedSession;
-                  if (!snap) return <Q3SummaryLeft />;
-                  if (snap.flow === 'q3') {
-                    return snap.screen === 'calendar' ? <CalendarLeft /> : <Q3SummaryLeft />;
-                  }
-                  // BI
-                  if (snap.screen === 'bi-dashboard') return <BIDashboardLeft />;
-                  if (snap.screen === 'bi-email') return <EmailLeft />;
-                  return <BIDocsLeft />;
-                })()}
-              </div>
-            </button>
-          )}
+          <button
+            onClick={handleClose}
+            title="Close"
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
+          <button
+            onClick={handleMinimize}
+            title="Minimize"
+            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+          />
         </div>
 
-        {/* "Documents included in the file" strip — sibling of the pill area
-            so it can extend below the 1200 frame and the page scrolls. */}
+        {/* Main SessionShell — fills the full inner. SessionShell renders the
+            pill at top: 50% (relative to its parent) which is now 1040 in the
+            2080-tall inner = exact vertical center. */}
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <SessionShell
+            phase={phase}
+            flow={flow}
+            leftContentKey={screen}
+            leftContents={leftContents}
+            chatMessages={chatMessages}
+            endSessionVisible={endSessionVisible}
+            onSubmit={onSubmit}
+            onEndSession={handleEndSession}
+            leftOverlay={leftOverlay}
+          />
+        </div>
+
+        {/* "Documents included in the file" strip — positioned just below the
+            pill bottom edge (50% + 495 = pill_center + half_pill_height). */}
         <DocsStrip visible={stripVisible} />
+
+        {/* Minimized preview — anchored to bottom-left of the inner. Hidden
+            during content phase (strip occupies that area). */}
+        {windowMode === 'minimized' && (
+          <button
+            onClick={handleRestore}
+            title="Restore"
+            style={{
+              position: 'absolute', bottom: '20px', left: '20px',
+              width: '180px', height: '180px',
+              borderRadius: '18px',
+              padding: 0, border: 'none',
+              overflow: 'hidden', cursor: 'pointer',
+              background: '#F4F4F9',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)',
+              zIndex: 101,
+            }}
+          >
+            <div style={{
+              position: 'absolute',
+              width: '1383.25px', height: '990px',
+              transform: `translate(-50%, -50%) scale(${180 / 990})`,
+              transformOrigin: 'center center',
+              top: '50%', left: '50%',
+              pointerEvents: 'none',
+            }}>
+              {(() => {
+                const snap = minimizedSession;
+                if (!snap) return <Q3SummaryLeft />;
+                if (snap.flow === 'q3') {
+                  return snap.screen === 'calendar' ? <CalendarLeft /> : <Q3SummaryLeft />;
+                }
+                if (snap.screen === 'bi-dashboard') return <BIDashboardLeft />;
+                if (snap.screen === 'bi-email') return <EmailLeft />;
+                return <BIDocsLeft />;
+              })()}
+            </div>
+          </button>
+        )}
       </div>
     </div>
   );

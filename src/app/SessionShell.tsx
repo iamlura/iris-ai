@@ -18,9 +18,12 @@ const PILL_SMALL_H = 94.42;
 const PILL_LARGE_W = 1817;
 const PILL_LARGE_H = 990;
 
-/* Position: landing pill is centered; expanded card is calc(50% + 49px) down */
+/* Position: both landing and expanded pill are centered in their parent.
+ * (Used to be +49 down on expanded; removed so the bubble sits at exact
+ * viewport center now that the inner container is taller to fit the
+ * documents strip below.) */
 const PILL_SMALL_TOP = '50%';
-const PILL_LARGE_TOP = 'calc(50% + 49px)';
+const PILL_LARGE_TOP = '50%';
 
 /* ===== Types ===== */
 export type Phase =
