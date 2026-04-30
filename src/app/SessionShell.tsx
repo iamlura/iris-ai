@@ -64,18 +64,6 @@ type Props = {
   leftOverlay?: ReactNode;
 };
 
-/* ===== Live clock ===== */
-function useLiveClock() {
-  const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const date = now.toLocaleDateString('en-CA').replace(/-/g, '.');
-  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-  return { date, time };
-}
-
 /* ===== Mic icon (matches landing) ===== */
 function MicIcon({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
   const s = size === 'lg' ? { w: 13.895, h: 26.934, vb: '0 0 15.395 27.6821', stroke: 1.5, rect: { w: 8.72144, h: 16.937, rx: 4.36072, x: 3.33629 }, v1: 'p4420c00', v2: 'M7.69702 20.3245V26.9323', v3: 'p30531980' } : { w: 7.816, h: 15.149, vb: '0 0 8.6597 15.5698', stroke: 0.84375, rect: { w: 4.90581, h: 9.52704, rx: 2.4529, x: 1.87646 }, v1: 'p15c82c80', v2: 'M4.32935 11.4316V15.1485', v3: 'p1a6c3e40' };
@@ -296,7 +284,6 @@ export default function SessionShell({
   onEndSession,
   leftOverlay,
 }: Props) {
-  const { date, time } = useLiveClock();
   const [inputValue, setInputValue] = useState('');
 
   // Measured pixel width of landing input text (or placeholder when empty).
@@ -368,25 +355,9 @@ export default function SessionShell({
       style={{
         position: 'absolute',
         inset: 0,
-        background: '#F4F4F9',
+        background: 'transparent',
       }}
     >
-      {/* Clock — always visible */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50px',
-          right: '41px',
-          textAlign: 'right',
-          color: 'black',
-          fontStyle: 'normal',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <p style={{ fontFamily: "'Google_Sans', sans-serif", lineHeight: 'normal', opacity: 0.5, fontSize: '16px', margin: 0 }}>{date}</p>
-        <p style={{ fontFamily: "'Google_Sans', sans-serif", lineHeight: 0.91, opacity: 0.8, fontSize: '36px', letterSpacing: '-1.08px', fontWeight: 500, margin: 0 }}>{time}</p>
-      </div>
-
       {/* Hidden span — measures text width so the small pill can grow with input. */}
       <span
         ref={measureRef}

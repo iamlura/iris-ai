@@ -7,8 +7,9 @@
  * the SessionShell so they can sit above the crossfade and swap independently.
  */
 
-// Asset URLs from Figma (same as original FrameBI)
-const imgBiDashboard  = "https://www.figma.com/api/mcp/asset/79da4616-4eba-4a5d-a9d1-8e8dfd4ff21b";
+// Asset URLs from Figma. imgBiChart (image_1226) is the new chart-only
+// asset from Figma node 1-3660; the title is rendered as text above it.
+const imgBiChart      = "https://www.figma.com/api/mcp/asset/73cff8b8-7898-4d7b-aa74-d2e35e1605aa";
 const imgOutlookEmail = "https://www.figma.com/api/mcp/asset/371210d9-d4f7-4349-853b-45041a5f2c7b";
 const imgShareIcon    = "https://www.figma.com/api/mcp/asset/4e00ede5-5184-4677-af12-441b02fe42f8";
 const imgChromeDots   = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
@@ -139,17 +140,62 @@ export function BIDocsLeft() {
 }
 
 /* ==========================================================================
-   BI DASHBOARD — full-bleed image
+   BI DASHBOARD — Figma 1-3660 layout: white card with "Fiscal year BI /
+   2025-2026" titles top-left and chart image filling the body.
    ========================================================================== */
 export function BIDashboardLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <div style={{ position: 'absolute', inset: '20px', borderRadius: '50px', background: '#f6f9fc', overflow: 'hidden' }}>
-        <img
-          alt="Fiscal Year BI Dashboard"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top' }}
-          src={imgBiDashboard}
-        />
+      <div style={{
+        position: 'absolute',
+        inset: '20px',
+        borderRadius: '50px',
+        background: '#f6f9fc',
+        overflow: 'hidden',
+      }}>
+        {/* Titles — small "Fiscal year BI" then large bold "2025-2026" */}
+        <p style={{
+          position: 'absolute',
+          left: '64px',
+          top: '199px',
+          margin: 0,
+          fontFamily: "'Google_Sans', sans-serif",
+          fontSize: '20px',
+          color: 'black',
+          opacity: 0.8,
+          lineHeight: 1.5,
+        }}>
+          Fiscal year BI
+        </p>
+        <p style={{
+          position: 'absolute',
+          left: '64px',
+          top: '230px',
+          margin: 0,
+          fontFamily: "'Google_Sans', sans-serif",
+          fontSize: '48px',
+          fontWeight: 700,
+          color: 'black',
+          opacity: 0.8,
+          lineHeight: 1.5,
+        }}>
+          2025-2026
+        </p>
+        {/* Chart image */}
+        <div style={{
+          position: 'absolute',
+          left: '46px',
+          right: '46px',
+          top: '328px',
+          bottom: '46px',
+          overflow: 'hidden',
+        }}>
+          <img
+            alt="Fiscal year BI dashboard"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'top left' }}
+            src={imgBiChart}
+          />
+        </div>
       </div>
       <ChromeDots />
     </div>
@@ -178,12 +224,14 @@ export function EmailLeft() {
    Action buttons — rendered as leftOverlay above crossfade
    ========================================================================== */
 export function BIActionButtons({ variant, onCreateBI, onShare }: { variant: 'edit-createbi' | 'edit-share'; onCreateBI?: () => void; onShare?: () => void }) {
+  // Figma 1-3660: share button right edge at x=1143.5 in 1817-wide pill →
+  // 673.5px from pill right; top: 52.91.
   return (
     <div
       style={{
         position: 'absolute',
-        right: '500px',
-        top: '68px',
+        right: '673.5px',
+        top: '53px',
         display: 'flex',
         gap: '16px',
         alignItems: 'center',

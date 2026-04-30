@@ -4,6 +4,18 @@ import { Q3SummaryLeft, CalendarLeft } from './LeftContentQ3';
 import { BIDocsLeft, BIDashboardLeft, EmailLeft, BIActionButtons } from './LeftContentBI';
 import DocsStrip from './DocsStrip';
 
+/* Live clock used by the viewport-anchored top-right indicator. */
+function useLiveClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const date = now.toLocaleDateString('en-CA').replace(/-/g, '.');
+  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  return { date, time };
+}
+
 /* ===== Timing constants (must match SessionShell) ===== */
 const EXPAND_DELAY = 800;
 const EXPAND_DURATION = 2000;
@@ -62,16 +74,18 @@ export default function App() {
   useEffect(() => () => clearTimers(), [clearTimers]);
 
   /* ===== Responsive scale =====
-   * Inner is 1920×2080 — pill (990) lives at vertical center, docs strip
-   * (~545) sits immediately below. Scale uses 2080 in the height denominator
-   * so the entire layout fits the viewport (no top crop, no scroll), and the
-   * pill ends up perfectly centered in screen because it is at the inner's
-   * vertical center. */
+   * Inner is 1920×2080 — pill (990) at vertical center, docs strip (~545)
+   * just below. Base scale uses 2080 in denominator so pill is centered and
+   * strip fits; we then apply a 1.15x boost so the bubble renders ~90% of
+   * unscaled size on the user's viewport (was ~80% before). The strip below
+   * the pill may extend past the viewport with this boost — that's fine,
+   * overflow is hidden and the bubble itself stays at viewport center. */
   useEffect(() => {
     const update = () => {
       const sx = window.innerWidth / 1920;
       const sy = window.innerHeight / 2080;
-      setScale(Math.min(sx, sy));
+      const base = Math.min(sx, sy);
+      setScale(Math.min(1, base * 1.15));
     };
     update();
     window.addEventListener('resize', update);
@@ -395,6 +409,8 @@ export default function App() {
   // The DocsStrip appears whenever the expanded card content is visible.
   const stripVisible = phase === 'content' || phase === 'expanding' || phase === 'ending';
 
+  const { date, time } = useLiveClock();
+
   return (
     <div
       style={{
@@ -405,8 +421,60 @@ export default function App() {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
+      {/* Clock — viewport-anchored top-right, 40px gap. */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '40px',
+          right: '40px',
+          textAlign: 'right',
+          color: 'black',
+          whiteSpace: 'nowrap',
+          zIndex: 200,
+          pointerEvents: 'none',
+        }}
+      >
+        <p style={{ fontFamily: "'Google_Sans', sans-serif", lineHeight: 'normal', opacity: 0.5, fontSize: '16px', margin: 0 }}>{date}</p>
+        <p style={{ fontFamily: "'Google_Sans', sans-serif", lineHeight: 0.91, opacity: 0.8, fontSize: '36px', letterSpacing: '-1.08px', fontWeight: 500, margin: 0 }}>{time}</p>
+      </div>
+
+      {/* Maximize button — viewport-anchored bottom-left, 40px gap. Toggles
+          fullscreen (YouTube-player style). */}
+      <button
+        onClick={toggleFullscreen}
+        title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+        style={{
+          position: 'absolute',
+          bottom: '40px',
+          left: '40px',
+          width: '44px',
+          height: '44px',
+          borderRadius: '12px',
+          border: 'none',
+          background: 'rgba(0,0,0,0.06)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 200,
+          padding: 0,
+        }}
+      >
+        {/* Expand-arrows icon (corners pointing outward) — flips to inward when in fullscreen. */}
+        {isFullscreen ? (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M8 3v5H3M12 3v5h5M8 17v-5H3M12 17v-5h5" stroke="black" strokeOpacity="0.7" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 8V3h5M17 8V3h-5M3 12v5h5M17 12v5h-5" stroke="black" strokeOpacity="0.7" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </button>
+
       <div
         style={{
           width: '1920px',

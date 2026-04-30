@@ -327,9 +327,14 @@ function CalWeekView() {
 export function CalendarLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {/* Dark calendar frame — sits at top:70 so chrome dots (at top:50) live
+          in the header strip above, never overlapping the calendar UI. */}
       <div style={{
         position: 'absolute',
-        inset: '20px',
+        left: '20px',
+        right: '20px',
+        top: '70px',
+        bottom: '20px',
         borderRadius: '50px',
         overflow: 'hidden',
         background: CAL_BG,
@@ -342,7 +347,7 @@ export function CalendarLeft() {
           <CalWeekView />
         </div>
       </div>
-      {/* Sidebar logo (window chrome dots) — overlay on top of calendar */}
+      {/* Window chrome dots — in the 70px header strip above the dark frame. */}
       <div style={{
         position: 'absolute',
         width: '120.96px',
