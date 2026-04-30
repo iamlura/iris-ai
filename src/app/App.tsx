@@ -485,40 +485,6 @@ export default function App() {
           transform: `scale(${scale})`,
         }}
       >
-        {/* Clickable overlays on top of the chrome-dots image (drawn by the
-            left-content of each flow at bubble-local (50, 50), size 120.96 × 30.319).
-            Pill is now centered in the 2080-tall inner with no +49 offset, so
-            chrome top = pill_top_edge + 50 = (50% - 495 + 50) = 50% - 445. */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 'calc(50% - 858.5px)',
-            top: 'calc(50% - 445px)',
-            width: '120.96px', height: '30.319px',
-            zIndex: 100,
-            display: 'flex',
-            opacity: phase === 'landing' ? 0 : 1,
-            pointerEvents: phase === 'landing' ? 'none' : 'auto',
-            transition: 'opacity 400ms ease',
-          }}
-        >
-          <button
-            onClick={handleClose}
-            title="Close"
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-          <button
-            onClick={handleMinimize}
-            title="Minimize"
-            style={{ flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
-          />
-        </div>
-
         {/* Main SessionShell — fills the full inner. SessionShell renders the
             pill at top: 50% (relative to its parent) which is now 1040 in the
             2080-tall inner = exact vertical center. */}

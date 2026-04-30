@@ -8,84 +8,107 @@
 // Asset URLs from Figma (same as original Frame2055246625)
 const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/df1ee347-b571-4056-88d5-48e05d6b6c1d";
 const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/24fc519f-dd12-4ac9-b597-d0999b655b0a";
-const imgGroup1010109929  = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
+
+/**
+ * Shared frame wrapper used by all left-content screens — same styling as
+ * the Email card (inset 20, 50px corner radius, clipped).
+ */
+function LeftFrame({
+  background,
+  centered = true,
+  children,
+}: {
+  background?: string;
+  centered?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div style={{
+      position: 'absolute',
+      inset: '20px',
+      borderRadius: '50px',
+      overflow: 'hidden',
+      background,
+      display: centered ? 'flex' : 'block',
+      alignItems: centered ? 'center' : undefined,
+      justifyContent: centered ? 'center' : undefined,
+      gap: centered ? '18px' : undefined,
+    }}>
+      {children}
+    </div>
+  );
+}
 
 /* ==========================================================================
    Q3 SUMMARY
    Shows sidebar with thumbnail strip + white doc area with "Q3 Summary" title.
    ========================================================================== */
 export function Q3SummaryLeft() {
+  // Per Figma 1-1779: sidebar 166.12 × 795.4, doc 1337.12 × 795.4, gap 18.
+  // Total content width 1521.24 exceeds frame inner 1343.25 — overflow clips
+  // by design.
+  const SIDEBAR_W = 166.12;
+  const DOC_W = 1337.12;
+  const H = 795.4;
+  // Match Figma proportional thumb count and spacing inside taller sidebar.
+  const THUMB_H = (H / 8.51); // sidebar fits ~8.5 thumbs vertically (was 723→8 thumbs)
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      {/* Sidebar logo (window chrome dots) */}
-      <div style={{
-        position: 'absolute',
-        width: '120.96px',
-        height: '30.319px',
-        left: '50px',
-        top: '50px',
-      }}>
-        <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
-      </div>
-
-      {/* Sidebar thumbnails strip — bottom-aligned to white doc area
-          (white doc: top=85, height=820, bottom=905; sidebar bottom=905) */}
-      <div style={{
-        position: 'absolute',
-        width: '151px',
-        height: '723px',
-        left: '50px',
-        top: '182px',
-        borderRadius: '20px 20px 20px 50px',
-        overflow: 'hidden',
-      }}>
-        <div style={{ position: 'absolute', width: '151.238px', height: '85.072px', left: 0, top: 0, borderRadius: '20px' }}>
-          <img alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '20px' }} src={imgRectangle3473784} />
-        </div>
-        {([
-          { top: 93, clip: { w: '303.93%', h: '300.42%', l: '0', t: '0' } },
-          { top: 186, clip: { w: '303.93%', h: '310.94%', l: '0', t: '-105.85%' } },
-          { top: 279, clip: { w: '303.93%', h: '308.53%', l: '0', t: '-207.35%' } },
-          { top: 372, clip: { w: '305.5%', h: '305.95%', l: '-102.29%', t: '-1.5%' } },
-          { top: 465, clip: { w: '302.45%', h: '301.42%', l: '-201.83%', t: '0' } },
-          { top: 558, clip: { w: '304.61%', h: '311.29%', l: '-102.99%', t: '-208.35%' } },
-          { top: 651, clip: { w: '302.53%', h: '311.29%', l: '-201.6%', t: '-208.35%' } },
-        ] as const).map(({ top, clip }, i) => (
-          <div key={i} style={{ position: 'absolute', width: '151.238px', height: '85.072px', left: 0, top: `${top}px`, borderRadius: '20px', overflow: 'hidden' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', width: clip.w, height: clip.h, left: clip.l, top: clip.t }} src={imgRectangle3473785} />
+      <LeftFrame>
+        {/* Sidebar slide deck */}
+        <div style={{
+          width: `${SIDEBAR_W}px`,
+          height: `${H}px`,
+          borderRadius: '20px 20px 20px 50px',
+          overflow: 'hidden',
+          position: 'relative',
+          flexShrink: 0,
+        }}>
+          <div style={{ position: 'absolute', width: `${SIDEBAR_W}px`, height: `${THUMB_H}px`, left: 0, top: 0, borderRadius: '20px' }}>
+            <img alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '20px' }} src={imgRectangle3473784} />
           </div>
-        ))}
-      </div>
+          {([
+            { idx: 1, clip: { w: '303.93%', h: '300.42%', l: '0', t: '0' } },
+            { idx: 2, clip: { w: '303.93%', h: '310.94%', l: '0', t: '-105.85%' } },
+            { idx: 3, clip: { w: '303.93%', h: '308.53%', l: '0', t: '-207.35%' } },
+            { idx: 4, clip: { w: '305.5%', h: '305.95%', l: '-102.29%', t: '-1.5%' } },
+            { idx: 5, clip: { w: '302.45%', h: '301.42%', l: '-201.83%', t: '0' } },
+            { idx: 6, clip: { w: '304.61%', h: '311.29%', l: '-102.99%', t: '-208.35%' } },
+            { idx: 7, clip: { w: '302.53%', h: '311.29%', l: '-201.6%', t: '-208.35%' } },
+          ] as const).map(({ idx, clip }, i) => (
+            <div key={i} style={{ position: 'absolute', width: `${SIDEBAR_W}px`, height: `${THUMB_H}px`, left: 0, top: `${idx * THUMB_H}px`, borderRadius: '20px', overflow: 'hidden' }}>
+              <img alt="" style={{ position: 'absolute', maxWidth: 'none', width: clip.w, height: clip.h, left: clip.l, top: clip.t }} src={imgRectangle3473785} />
+            </div>
+          ))}
+        </div>
 
-      {/* White doc area */}
-      <div style={{
-        position: 'absolute',
-        width: '1100px',
-        height: '820px',
-        left: '230px',
-        top: '85px',
-        background: 'white',
-        borderRadius: '20px',
-        opacity: 0.8,
-      }} />
-
-      {/* Q3 Summary title */}
-      <p style={{
-        position: 'absolute',
-        left: '280px',
-        top: '460px',
-        transform: 'translateY(-50%)',
-        fontFamily: "'Google_Sans', sans-serif",
-        fontWeight: 700,
-        fontSize: '52.054px',
-        color: 'black',
-        opacity: 0.8,
-        lineHeight: 1.5,
-        margin: 0,
-        whiteSpace: 'nowrap',
-      }}>
-        Q3 Summary
-      </p>
+        {/* White doc preview */}
+        <div style={{
+          width: `${DOC_W}px`,
+          height: `${H}px`,
+          background: 'white',
+          borderRadius: '20px',
+          opacity: 0.8,
+          position: 'relative',
+          flexShrink: 0,
+        }}>
+          <p style={{
+            position: 'absolute',
+            left: '50px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            fontFamily: "'Google_Sans', sans-serif",
+            fontWeight: 700,
+            fontSize: '52.054px',
+            color: 'black',
+            lineHeight: 1.5,
+            margin: 0,
+            whiteSpace: 'nowrap',
+          }}>
+            Q3 Summary
+          </p>
+        </div>
+      </LeftFrame>
     </div>
   );
 }
@@ -327,37 +350,15 @@ function CalWeekView() {
 export function CalendarLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      {/* Dark calendar frame — sits at top:70 so chrome dots (at top:50) live
-          in the header strip above, never overlapping the calendar UI. */}
-      <div style={{
-        position: 'absolute',
-        left: '20px',
-        right: '20px',
-        top: '70px',
-        bottom: '20px',
-        borderRadius: '50px',
-        overflow: 'hidden',
-        background: CAL_BG,
-        display: 'flex',
-        flexDirection: 'column',
-      }}>
-        <CalToolbar />
-        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-          <CalSidebar />
-          <CalWeekView />
+      <LeftFrame background={CAL_BG} centered={false}>
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <CalToolbar />
+          <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+            <CalSidebar />
+            <CalWeekView />
+          </div>
         </div>
-      </div>
-      {/* Window chrome dots — in the 70px header strip above the dark frame. */}
-      <div style={{
-        position: 'absolute',
-        width: '120.96px',
-        height: '30.319px',
-        left: '50px',
-        top: '50px',
-        zIndex: 2,
-      }}>
-        <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
-      </div>
+      </LeftFrame>
     </div>
   );
 }

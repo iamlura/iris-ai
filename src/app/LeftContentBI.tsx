@@ -12,19 +12,33 @@
 const imgBiChart      = "https://www.figma.com/api/mcp/asset/73cff8b8-7898-4d7b-aa74-d2e35e1605aa";
 const imgOutlookEmail = "https://www.figma.com/api/mcp/asset/371210d9-d4f7-4349-853b-45041a5f2c7b";
 const imgShareIcon    = "https://www.figma.com/api/mcp/asset/4e00ede5-5184-4677-af12-441b02fe42f8";
-const imgChromeDots   = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
 
-// Shared top-left window chrome decoration (three dots), matches Q3 flow
-function ChromeDots() {
+/**
+ * Shared frame wrapper used by all left-content screens. Matches the Email
+ * card styling: inset 20, 50px corner radius, clipped contents. Children are
+ * centered both axes by default; pass `centered={false}` to opt out.
+ */
+function LeftFrame({
+  background,
+  centered = true,
+  children,
+}: {
+  background?: string;
+  centered?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div style={{
       position: 'absolute',
-      width: '120.96px',
-      height: '30.319px',
-      left: '50px',
-      top: '50px',
+      inset: '20px',
+      borderRadius: '50px',
+      overflow: 'hidden',
+      background,
+      display: centered ? 'flex' : 'block',
+      alignItems: centered ? 'center' : undefined,
+      justifyContent: centered ? 'center' : undefined,
     }}>
-      <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgChromeDots} />
+      {children}
     </div>
   );
 }
@@ -47,7 +61,8 @@ const imgRect23 = "https://www.figma.com/api/mcp/asset/4b47c7e8-5d32-43fc-9824-1
 export function BIDocsLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <ChromeDots />
+     <LeftFrame>
+      <div style={{ position: 'relative', width: '1062px', height: '913px' }}>
       {/* Title */}
       <p style={{
         position: 'absolute',
@@ -56,8 +71,8 @@ export function BIDocsLeft() {
         fontSize: '20px',
         color: 'black',
         opacity: 0.8,
-        left: '70px',
-        top: '78px',
+        left: 0,
+        top: 0,
         lineHeight: 1.5,
         margin: 0,
       }}>
@@ -70,8 +85,8 @@ export function BIDocsLeft() {
         fontSize: '48px',
         color: 'black',
         opacity: 0.8,
-        left: '70px',
-        top: '116px',
+        left: 0,
+        top: '38px',
         lineHeight: 1.5,
         margin: 0,
       }}>
@@ -79,7 +94,7 @@ export function BIDocsLeft() {
       </p>
 
       {/* Document grid */}
-      <div style={{ position: 'absolute', height: '815px', left: '70px', top: '176px', width: '1062px', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', height: '815px', left: 0, top: '98px', width: '1062px', overflow: 'hidden' }}>
         {/* Col 0 */}
         <div style={{ position: 'absolute', height: '250px', left: 0, top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
@@ -135,6 +150,8 @@ export function BIDocsLeft() {
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect23} />
         </div>
       </div>
+      </div>
+     </LeftFrame>
     </div>
   );
 }
@@ -146,58 +163,46 @@ export function BIDocsLeft() {
 export function BIDashboardLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <div style={{
-        position: 'absolute',
-        inset: '20px',
-        borderRadius: '50px',
-        background: '#f6f9fc',
-        overflow: 'hidden',
-      }}>
-        {/* Titles — small "Fiscal year BI" then large bold "2025-2026" */}
-        <p style={{
-          position: 'absolute',
-          left: '64px',
-          top: '199px',
-          margin: 0,
-          fontFamily: "'Google_Sans', sans-serif",
-          fontSize: '20px',
-          color: 'black',
-          opacity: 0.8,
-          lineHeight: 1.5,
-        }}>
-          Fiscal year BI
-        </p>
-        <p style={{
-          position: 'absolute',
-          left: '64px',
-          top: '230px',
-          margin: 0,
-          fontFamily: "'Google_Sans', sans-serif",
-          fontSize: '48px',
-          fontWeight: 700,
-          color: 'black',
-          opacity: 0.8,
-          lineHeight: 1.5,
-        }}>
-          2025-2026
-        </p>
-        {/* Chart image */}
+      <LeftFrame background="#dde7f5">
+        {/* Centered title + chart block */}
         <div style={{
-          position: 'absolute',
-          left: '46px',
-          right: '46px',
-          top: '328px',
-          bottom: '46px',
-          overflow: 'hidden',
+          width: '1200px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '30px',
         }}>
-          <img
-            alt="Fiscal year BI dashboard"
-            style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'top left' }}
-            src={imgBiChart}
-          />
+          <div>
+            <p style={{
+              margin: 0,
+              fontFamily: "'Google_Sans', sans-serif",
+              fontSize: '20px',
+              color: 'black',
+              opacity: 0.8,
+              lineHeight: 1.5,
+            }}>
+              Fiscal year BI
+            </p>
+            <p style={{
+              margin: 0,
+              fontFamily: "'Google_Sans', sans-serif",
+              fontSize: '48px',
+              fontWeight: 700,
+              color: 'black',
+              opacity: 0.8,
+              lineHeight: 1.5,
+            }}>
+              2025-2026
+            </p>
+          </div>
+          <div style={{ width: '100%', height: '600px', overflow: 'hidden' }}>
+            <img
+              alt="Fiscal year BI dashboard"
+              style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
+              src={imgBiChart}
+            />
+          </div>
         </div>
-      </div>
-      <ChromeDots />
+      </LeftFrame>
     </div>
   );
 }
@@ -208,14 +213,13 @@ export function BIDashboardLeft() {
 export function EmailLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <div style={{ position: 'absolute', inset: '20px', borderRadius: '50px', overflow: 'hidden' }}>
+      <LeftFrame centered={false}>
         <img
           alt="Outlook Email"
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top' }}
           src={imgOutlookEmail}
         />
-      </div>
-      <ChromeDots />
+      </LeftFrame>
     </div>
   );
 }
