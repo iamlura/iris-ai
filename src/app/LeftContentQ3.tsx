@@ -8,28 +8,7 @@
 // Asset URLs from Figma (same as original Frame2055246625)
 const imgRectangle3473784 = "https://www.figma.com/api/mcp/asset/df1ee347-b571-4056-88d5-48e05d6b6c1d";
 const imgRectangle3473785 = "https://www.figma.com/api/mcp/asset/24fc519f-dd12-4ac9-b597-d0999b655b0a";
-
-// Window chrome dots — CSS-drawn so they don't break when the Figma CDN URL
-// expires. Click zones in App.tsx still overlay these.
-function ChromeDots({ zIndex = 0 }: { zIndex?: number }) {
-  return (
-    <div style={{
-      position: 'absolute',
-      width: '120.96px',
-      height: '30.319px',
-      left: '50px',
-      top: '50px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      zIndex,
-    }}>
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#ed6a5e' }} />
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#f5bf4f' }} />
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#62c554' }} />
-    </div>
-  );
-}
+const imgGroup1010109929  = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
 
 /* ==========================================================================
    Q3 SUMMARY
@@ -38,7 +17,16 @@ function ChromeDots({ zIndex = 0 }: { zIndex?: number }) {
 export function Q3SummaryLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <ChromeDots />
+      {/* Sidebar logo (window chrome dots) */}
+      <div style={{
+        position: 'absolute',
+        width: '120.96px',
+        height: '30.319px',
+        left: '50px',
+        top: '50px',
+      }}>
+        <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
+      </div>
 
       {/* Sidebar thumbnails strip — bottom-aligned to white doc area
           (white doc: top=85, height=820, bottom=905; sidebar bottom=905) */}
@@ -360,7 +348,16 @@ export function CalendarLeft() {
         </div>
       </div>
       {/* Window chrome dots — in the 70px header strip above the dark frame. */}
-      <ChromeDots zIndex={2} />
+      <div style={{
+        position: 'absolute',
+        width: '120.96px',
+        height: '30.319px',
+        left: '50px',
+        top: '50px',
+        zIndex: 2,
+      }}>
+        <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgGroup1010109929} />
+      </div>
     </div>
   );
 }

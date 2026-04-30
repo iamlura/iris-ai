@@ -11,10 +11,10 @@
 // asset from Figma node 1-3660; the title is rendered as text above it.
 const imgBiChart      = "https://www.figma.com/api/mcp/asset/73cff8b8-7898-4d7b-aa74-d2e35e1605aa";
 const imgOutlookEmail = "https://www.figma.com/api/mcp/asset/371210d9-d4f7-4349-853b-45041a5f2c7b";
+const imgShareIcon    = "https://www.figma.com/api/mcp/asset/4e00ede5-5184-4677-af12-441b02fe42f8";
+const imgChromeDots   = "https://www.figma.com/api/mcp/asset/b9c706f4-344e-4844-8ef6-81af64258219";
 
-// Shared top-left window chrome decoration (three dots).
-// CSS-drawn (not Figma image) so they don't break when the Figma CDN URL
-// expires after 7 days. Click zones in App.tsx still overlay these.
+// Shared top-left window chrome decoration (three dots), matches Q3 flow
 function ChromeDots() {
   return (
     <div style={{
@@ -23,13 +23,8 @@ function ChromeDots() {
       height: '30.319px',
       left: '50px',
       top: '50px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
     }}>
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#ed6a5e' }} />
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#f5bf4f' }} />
-      <div style={{ width: '30.319px', height: '30.319px', borderRadius: '50%', background: '#62c554' }} />
+      <img alt="" style={{ width: '100%', height: '100%', display: 'block' }} src={imgChromeDots} />
     </div>
   );
 }
@@ -53,15 +48,6 @@ export function BIDocsLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <ChromeDots />
-      {/* Centered wrapper — title + grid block, centered both axes */}
-      <div style={{
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '1062px',
-        height: '913px',
-      }}>
       {/* Title */}
       <p style={{
         position: 'absolute',
@@ -70,8 +56,8 @@ export function BIDocsLeft() {
         fontSize: '20px',
         color: 'black',
         opacity: 0.8,
-        left: 0,
-        top: 0,
+        left: '70px',
+        top: '78px',
         lineHeight: 1.5,
         margin: 0,
       }}>
@@ -84,8 +70,8 @@ export function BIDocsLeft() {
         fontSize: '48px',
         color: 'black',
         opacity: 0.8,
-        left: 0,
-        top: '38px',
+        left: '70px',
+        top: '116px',
         lineHeight: 1.5,
         margin: 0,
       }}>
@@ -93,7 +79,7 @@ export function BIDocsLeft() {
       </p>
 
       {/* Document grid */}
-      <div style={{ position: 'absolute', height: '815px', left: 0, top: '98px', width: '1062px', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', height: '815px', left: '70px', top: '176px', width: '1062px', overflow: 'hidden' }}>
         {/* Col 0 */}
         <div style={{ position: 'absolute', height: '250px', left: 0, top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
@@ -149,7 +135,6 @@ export function BIDocsLeft() {
           <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect23} />
         </div>
       </div>
-      </div>
     </div>
   );
 }
@@ -165,51 +150,51 @@ export function BIDashboardLeft() {
         position: 'absolute',
         inset: '20px',
         borderRadius: '50px',
-        background: '#dde7f5',
+        background: '#f6f9fc',
         overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
       }}>
-        {/* Centered title + chart block */}
-        <div style={{
-          width: '1200px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '30px',
+        {/* Titles — small "Fiscal year BI" then large bold "2025-2026" */}
+        <p style={{
+          position: 'absolute',
+          left: '64px',
+          top: '199px',
+          margin: 0,
+          fontFamily: "'Google_Sans', sans-serif",
+          fontSize: '20px',
+          color: 'black',
+          opacity: 0.8,
+          lineHeight: 1.5,
         }}>
-          {/* Titles — small "Fiscal year BI" then large bold "2025-2026" */}
-          <div>
-            <p style={{
-              margin: 0,
-              fontFamily: "'Google_Sans', sans-serif",
-              fontSize: '20px',
-              color: 'black',
-              opacity: 0.8,
-              lineHeight: 1.5,
-            }}>
-              Fiscal year BI
-            </p>
-            <p style={{
-              margin: 0,
-              fontFamily: "'Google_Sans', sans-serif",
-              fontSize: '48px',
-              fontWeight: 700,
-              color: 'black',
-              opacity: 0.8,
-              lineHeight: 1.5,
-            }}>
-              2025-2026
-            </p>
-          </div>
-          {/* Chart image */}
-          <div style={{ width: '100%', height: '600px', overflow: 'hidden' }}>
-            <img
-              alt="Fiscal year BI dashboard"
-              style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
-              src={imgBiChart}
-            />
-          </div>
+          Fiscal year BI
+        </p>
+        <p style={{
+          position: 'absolute',
+          left: '64px',
+          top: '230px',
+          margin: 0,
+          fontFamily: "'Google_Sans', sans-serif",
+          fontSize: '48px',
+          fontWeight: 700,
+          color: 'black',
+          opacity: 0.8,
+          lineHeight: 1.5,
+        }}>
+          2025-2026
+        </p>
+        {/* Chart image */}
+        <div style={{
+          position: 'absolute',
+          left: '46px',
+          right: '46px',
+          top: '328px',
+          bottom: '46px',
+          overflow: 'hidden',
+        }}>
+          <img
+            alt="Fiscal year BI dashboard"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'top left' }}
+            src={imgBiChart}
+          />
         </div>
       </div>
       <ChromeDots />
@@ -268,10 +253,9 @@ export function BIActionButtons({ variant, onCreateBI, onShare }: { variant: 'ed
           onClick={onShare}
           style={{ background: '#034bd8', padding: '7.2px 25.2px 6px', borderRadius: '42.6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6.4px', cursor: 'pointer' }}
         >
-          <svg width="14" height="16" viewBox="0 0 14 16" fill="none" style={{ display: 'block' }} aria-hidden>
-            <path d="M7 1L7 11M7 1L4 4M7 1L10 4" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M2 8V14H12V8" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <div style={{ height: '14.565px', width: '11.272px', position: 'relative' }}>
+            <img alt="" style={{ display: 'block', width: '100%', height: '100%' }} src={imgShareIcon} />
+          </div>
           <span style={{ fontFamily: "'Google_Sans', sans-serif", fontWeight: 500, fontSize: '21.6px', color: 'white', lineHeight: 1.5 }}>share</span>
         </div>
       )}
