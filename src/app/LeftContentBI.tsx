@@ -61,94 +61,71 @@ const imgRect23 = "https://www.figma.com/api/mcp/asset/4b47c7e8-5d32-43fc-9824-1
 export function BIDocsLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-     <LeftFrame>
-      <div style={{ position: 'relative', width: '1062px', height: '913px' }}>
-      {/* Title */}
-      <p style={{
-        position: 'absolute',
-        fontFamily: "'Google_Sans', sans-serif",
-        fontWeight: 400,
-        fontSize: '20px',
-        color: 'black',
-        opacity: 0.8,
-        left: 0,
-        top: 0,
-        lineHeight: 1.5,
-        margin: 0,
+     <LeftFrame background="rgba(255,255,255,0.4)" centered={false}>
+      <div style={{
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+        padding: '40px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
       }}>
-        Collection of Documents
-      </p>
-      <p style={{
-        position: 'absolute',
-        fontFamily: "'Google_Sans', sans-serif",
-        fontWeight: 700,
-        fontSize: '48px',
-        color: 'black',
-        opacity: 0.8,
-        left: 0,
-        top: '38px',
-        lineHeight: 1.5,
-        margin: 0,
-      }}>
-        2025-2026
-      </p>
+      {/* Title row */}
+      <div style={{ width: '100%', height: '90px', position: 'relative', flexShrink: 0 }}>
+        <p style={{
+          position: 'absolute',
+          fontFamily: "'Google_Sans', sans-serif",
+          fontWeight: 400,
+          fontSize: '20px',
+          color: 'black',
+          opacity: 0.8,
+          left: 0,
+          top: 0,
+          lineHeight: 1.5,
+          margin: 0,
+        }}>
+          Collection of Documents
+        </p>
+        <p style={{
+          position: 'absolute',
+          fontFamily: "'Google_Sans', sans-serif",
+          fontWeight: 700,
+          fontSize: '48px',
+          color: 'black',
+          opacity: 0.8,
+          left: 0,
+          top: '18px',
+          lineHeight: 1.5,
+          margin: 0,
+        }}>
+          2025-2026
+        </p>
+      </div>
 
-      {/* Document grid */}
-      <div style={{ position: 'absolute', height: '815px', left: 0, top: '98px', width: '1062px', overflow: 'hidden' }}>
-        {/* Col 0 */}
-        <div style={{ position: 'absolute', height: '250px', left: 0, top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '119.94%', left: '-6.6%', top: '-12.67%', width: '230.06%' }} src={imgRect12} />
+      {/* Document grid — 4 cols × 3 rows, fills remaining frame space */}
+      <div style={{
+        flex: 1,
+        minHeight: 0,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateRows: 'repeat(3, 1fr)',
+        gap: '24px',
+        overflow: 'hidden',
+      }}>
+        {[imgRect12, imgRect13, imgRect14, imgRect18,
+          imgRect15, imgRect15, imgRect17, imgRect19,
+          imgRect20, imgRect21, imgRect22, imgRect23,
+        ].map((src, i) => (
+          <div key={i} style={{
+            opacity: 0.6,
+            borderRadius: '31px',
+            overflow: 'hidden',
+            background: '#fff',
+          }}>
+            <img alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} src={src} />
           </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '0.03px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: 0, top: 0, width: '200.92%' }} src={imgRect15} />
-          </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '0.03px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: 0, top: 0, width: '309.82%' }} src={imgRect20} />
-          </div>
-        </div>
-        {/* Col 1 */}
-        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-3.31%', top: 0, width: '206.61%' }} src={imgRect13} />
-          </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-100.92%', top: 0, width: '200.92%' }} src={imgRect15} />
-          </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '272.74px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect21} />
-        </div>
-        {/* Col 2 */}
-        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-5.89%', top: 0, width: '274.65%' }} src={imgRect14} />
-          </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect17} />
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '545.45px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect22} />
-        </div>
-        {/* Col 3 */}
-        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '0px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect18} />
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '280px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: '31px' }}>
-            <img alt="" style={{ position: 'absolute', maxWidth: 'none', height: '100%', left: '-8.01%', top: 0, width: '229.57%' }} src={imgRect19} />
-          </div>
-        </div>
-        <div style={{ position: 'absolute', height: '250px', left: '818.16px', top: '560px', width: '243.712px', opacity: 0.6, borderRadius: '31px' }}>
-          <img alt="" style={{ position: 'absolute', inset: 0, maxWidth: 'none', objectFit: 'cover', borderRadius: '31px', width: '100%', height: '100%' }} src={imgRect23} />
-        </div>
+        ))}
       </div>
       </div>
      </LeftFrame>
@@ -163,16 +140,22 @@ export function BIDocsLeft() {
 export function BIDashboardLeft() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <LeftFrame background="#dde7f5">
-        {/* Centered title + chart block */}
+      <LeftFrame background="white" centered={false}>
         <div style={{
-          width: '1200px',
+          width: '100%',
+          height: '100%',
+          boxSizing: 'border-box',
+          padding: '40px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '30px',
+          gap: '80px',
         }}>
-          <div>
+          {/* Title row */}
+          <div style={{ width: '100%', height: '90px', position: 'relative', flexShrink: 0 }}>
             <p style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
               margin: 0,
               fontFamily: "'Google_Sans', sans-serif",
               fontSize: '20px',
@@ -183,6 +166,9 @@ export function BIDashboardLeft() {
               Fiscal year BI
             </p>
             <p style={{
+              position: 'absolute',
+              left: 0,
+              top: '18px',
               margin: 0,
               fontFamily: "'Google_Sans', sans-serif",
               fontSize: '48px',
@@ -194,7 +180,8 @@ export function BIDashboardLeft() {
               2025-2026
             </p>
           </div>
-          <div style={{ width: '100%', height: '600px', overflow: 'hidden' }}>
+          {/* Chart filling remaining space */}
+          <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
             <img
               alt="Fiscal year BI dashboard"
               style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
